@@ -1,11 +1,11 @@
 module.exports = {
     sensor: {
-        par: 0,
-        vpd: 0,
-        temperature: 0,
-        humidity:0,
-        soil: 0,
+        par: 53,
+        vpd: 15032,
+        temperature: 23,
+        humidity:54,
+        soil: 62,
         date: '2017-01-01',
-        time: new Date().getTime()
+        time: '00:00:00'
     }
 }
