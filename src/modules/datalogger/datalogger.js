@@ -2,8 +2,8 @@ var sensors = require('../models/sensors');
 var moment = require('moment');
 var fs = require('fs');
 var loop = null;
-// var loggerTime = 5000;
-var loggerTime = 5 * 1000 * 60;
+var loggerTime = 5000;
+// var loggerTime = 5 * 1000 * 60;
 
 var dir = __dirname.replace('src/modules/datalogger', 'Logger/');
 if (!fs.existsSync(dir)){
@@ -27,10 +27,9 @@ var LoggerLoop = function() {
         var datestr = "DATE" + sensor.date
         var loggerStr = {
             'datetime': moment(sensor.date + " " + sensor.time).toDate(),
-            'time': sensor.time,
-            'temp': sensor.temp,
-            'humi': sensor.humi,
-            'light': sensor.light,
+            'temp': sensor.temperature,
+            'humi': sensor.humidity,
+            'par': sensor.par,
             'soil': sensor.soil,
             'vpd': sensor.vpd
         }
