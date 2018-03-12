@@ -1,5 +1,8 @@
 var fs = require('fs');
-
+var dir = require('./config').control_dir;
+if(!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 const channel1 = {
     ch: 1,
     mode: 0,
@@ -164,14 +167,20 @@ var control = [
     channel1, channel2, channel3, channel4
 ]
 
-var data = fs.readFileSync(__dirname + '/control.json')
+var saveFile = function(jsonData){
+    fs.writeFileSync(dir + 'control.json', JSON.stringify(jsonData), function(err){
+        console.log(err);
+    });
+}
+
+if( !fs.existsSync(dir+ 'control.json') ){
+    saveFile(control);
+}
+
+var data = fs.readFileSync(dir + 'control.json')
 control = JSON.parse(data.toString());
 
 module.exports = {
     control: control ,
-    saveFile: function(jsonData){
-        fs.writeFileSync(__dirname + '/control.json', JSON.stringify(jsonData), function(err){
-            console.log(err);
-        });
-    }
+    saveFile: saveFile
 }

@@ -2,15 +2,9 @@ var express = require('express')
 var router = express.Router();
 var fs = require('fs');
 var sensors = require('../../models/sensors');
-
-
-router.get('/control', function(req, res) {
-    var data = config.ch_channel;
-    res.json(data);
-});
-
+var dir = require('../../models/config').logger_dir;
+var moment = require('moment');
 router.get('/short-logger', function(req, res){
-
     res.json(sensors.shortLogger)
 })
 
@@ -22,7 +16,7 @@ router.get('/getdata', function(req, res) {
     }
     var date = qstr.date;
     try {
-        var buffer = fs.readFileSync(config.rootdir + '/logger/' + date);
+        var buffer = fs.readFileSync( dir + date);
         var str = buffer.toString();
         str = str.substring(0, str.length - 2);
         str = "[" + str + "]";
@@ -31,6 +25,7 @@ router.get('/getdata', function(req, res) {
         delete jstr, str;
         res.json(jstr);
     } catch (error) {
+        console.log(error)
         res.json({ "status": "Error", "description": "No record" })
     }
 });
@@ -44,17 +39,24 @@ router.get('/checkdate', function(req, res) {
     var MY = req.query.my;
     var dateList = [];
 
-    fs.readdir(config.rootdir + "/logger/", function(err, files) {
+    fs.readdir(dir , function(err, files) {
         try {
             files.forEach(function(file) {
-                if (file.substring(6, file.length) == MY) {
-                    var str = file.replace("DATE", "");
-                    str = str[0] + str[1] + "-" + str[2] + str[3] + "-" + str[4] + str[5];
-                    var list = {
-                        "name": str,
-                        "val": file
+                
+                let datefile = file.replace('DATE', '');
+                if (datefile.substring(0, 7) == MY) {
+                    let buffer = fs.readFileSync( dir + file);
+                    let str = buffer.toString();
+                    str = str.substring(0, str.length - 2);
+                    str = "[" + str + "]";
+                    str = str.trim(",\n");
+                    let json =  JSON.parse(str);
+                    let data = {
+                        file: file,
+                        date: moment(datefile).format('YYYY-MM-DD'),
+                        records: json.length
                     }
-                    dateList.push(list);
+                    dateList.push(data);
                 }
             });
 
@@ -62,6 +64,7 @@ router.get('/checkdate', function(req, res) {
             delete dateList;
             res.end();
         } catch (ex) {
+            console.log(ex);
             res.json([])
         }
     });
