@@ -4,14 +4,14 @@ var saveFile = require('../models/control.js').saveFile;
 var write = null;
 
 
-var RequestSensor = function(){
+var RequestSensor = function () {
     write.next("{sensors}");
 }
 
-var SendDateTime = function(datetime){
+var SendDateTime = function (datetime) {
     var date = datetime.date.split('-');
     var time = datetime.time.split(':');
-    console.log(date,time);
+    console.log(date, time);
     var payload = {
         day: parseInt(date[2]),
         month: parseInt(date[1]),
@@ -21,11 +21,11 @@ var SendDateTime = function(datetime){
     }
 
     console.log(payload);
-    let strcmd = '{datetime,' + payload.day +',' + 
-                             payload.month +','+
-                             payload.year +',' + 
-                             payload.hour +','+ 
-                             payload.min + '}';
+    let strcmd = '{datetime,' + payload.day + ',' +
+        payload.month + ',' +
+        payload.year + ',' +
+        payload.hour + ',' +
+        payload.min + '}';
     write.next(strcmd);
 }
 
@@ -47,12 +47,14 @@ var ControlFilter = function (data) {
     saveFile(control);
 }
 module.exports = {
-    setWrite(wr){
+    setWrite(wr) {
         write = wr;
-        
+
         setInterval(RequestSensor, 1000);
     },
     CommandProcess: function (cmd) {
+
+
         try {
             var jsonData = JSON.parse(cmd);
             if (jsonData.type == 'control') {
@@ -60,55 +62,60 @@ module.exports = {
                     ControlFilter(d);
                 });
             }
-            if(jsonData.type == 'sensor'){
+            if (jsonData.type == 'sensor') {
                 sensors.sensor = jsonData.data;
+                let s  = parseInt(jsonData.data.time.split(':')[2]);
+                
+                if(s % 30 == 0){
+                    console.log(sensors.shortLogger.length);
+                    sensors.shortLogger.push(jsonData.data);
+                    if(sensors.shortLogger.length >= 20){
+                        sensors.shortLogger.shift();
+                    }
+                }
                 
             }
         } catch (e) {
-            
+
         }
     },
-    SendCommand(chData,updateChannel){
+    SendCommand(chData, updateChannel) {
         var ch = chData.ch;
         var mode = chData.mode;
         var strcmd = ""
-    
-        if(ch != (updateChannel+1)){
+
+        if (ch != (updateChannel + 1)) {
             ControlFilter(chData);
             return;
         }
-        if(mode == 0){
+        if (mode == 0) {
             strcmd = "{manual," + ch + "," + chData.manual.status + "}";
-        }
-        else if(mode == 1){
+        } else if (mode == 1) {
             // {timer,1,1,20-60,90-150,200-260}
             let list = chData.timer.list;
             let strlist = []
             strcmd = "{timer," + ch + "," + chData.timer.mode + ",";
-            list.forEach( l =>{
+            list.forEach(l => {
                 strlist.push(l.join('-'))
             })
             strcmd += strlist.join(',');
             strcmd += "}";
-        }
-        else if(mode == 2){
+        } else if (mode == 2) {
             //{setpoint,channel,setpoint_value, working, detecting, sensor}
             let setpoint = chData.setpoint;
-            strcmd = "{setpoint," + ch + "," +  setpoint.setpoint + "," + setpoint.working + "," + setpoint.detecting + "," + chData.sensor + "}"
-        }
-        else if(mode == 3){
+            strcmd = "{setpoint," + ch + "," + setpoint.setpoint + "," + setpoint.working + "," + setpoint.detecting + "," + chData.sensor + "}"
+        } else if (mode == 3) {
             let setbound = chData.setbound;
             // {setbound, channel, upper,lower,sensor}
             strcmd = "{setbound," + ch + "," + setbound.start + "," + setbound.stop + "," + chData.sensor + "}";
-        }
-        else if(mode == 4){
+        } else if (mode == 4) {
             //{irrigation,ch, irr_mode,soil_up, soil_low, par_acc}
             let irr = chData.irrigation;
             strcmd = "{irrigation," + ch + "," + irr.mode + "," + irr.soil.start + "," + irr.soil.stop + "," + irr.par_accum + "}";
         }
         ControlFilter(chData);
         write.next(strcmd);
-        
+
     },
     SendDateTime: SendDateTime
 };

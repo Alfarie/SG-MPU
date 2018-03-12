@@ -1,12 +1,18 @@
 var express = require('express')
 var router = express.Router();
 var fs = require('fs');
+var sensors = require('../../models/sensors');
 
 
 router.get('/control', function(req, res) {
     var data = config.ch_channel;
     res.json(data);
 });
+
+router.get('/short-logger', function(req, res){
+
+    res.json(sensors.shortLogger)
+})
 
 router.get('/getdata', function(req, res) {
     var qstr = req.query;

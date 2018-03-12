@@ -1,11 +1,17 @@
-var sensors = require('./sensors');
-var config = require('../config');
+var sensors = require('../models/sensors');
+var moment = require('moment');
 var fs = require('fs');
 var loop = null;
+var loggerTime = 2000; //min
+
+var dir = __dirname.replace('src/modules/datalogger', 'Logger');
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 
 var start = function() {
-    console.log("LOGGER TIME : " + config.logger_time);
-    loop = setInterval(LoggerLoop, config.logger_time);
+    console.log("LOGGER TIME : " + loggerTime);
+    loop = setInterval(LoggerLoop, loggerTime);
 }
 
 var stop = function() {
@@ -13,13 +19,13 @@ var stop = function() {
 }
 
 var LoggerLoop = function() {
-    var sensor = sensors.sensors;
-    if (sensor.date != undefined) {
+    var sensor = sensors.sensor;
+    if (sensor != undefined) {
         var t = sensor.time.split(":");
         var d = sensor.date.split("/");
         var datestr = "DATE" + d[1] + "" + d[0] + "" + d[2];
         var loggerStr = {
-            'datetime': new Date(Number(d[2]), Number(d[1]), 2000 + Number(d[0]), Number(t[0]), Number(t[1]), Number(t[2]), 0).getTime(),
+            'datetime': moment(sensor.date + " " + sensor.time),
             'time': sensor.time,
             'temp': sensor.temp,
             'humi': sensor.humi,
@@ -27,13 +33,11 @@ var LoggerLoop = function() {
             'soil': sensor.soil,
             'vpd': sensor.vpd
         }
-        fs.appendFile(config.rootdir + '/logger/' + datestr, JSON.stringify(loggerStr) + ",\n", function(err) {
+        fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function(err) {
             if (err) console.log(err);
             console.log('[LOGGER] saved!');
-        })
+        });
     }
 }
 
-
-module.exports.start = start;
-module.exports.stop = stop;
+start();
