@@ -31,7 +31,8 @@ var LoggerLoop = function() {
             'humidity': sensor.humidity,
             'par': sensor.par,
             'soil': sensor.soil,
-            'vpd': sensor.vpd
+            'vpd': sensor.vpd,
+            'paracc': parseFloat( (sensors.parAccumulation / 1000).toFixed(2))
         }
         fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function(err) {
             if (err) console.log(err);

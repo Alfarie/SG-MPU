@@ -17,7 +17,8 @@ var scanPort = function () {
     var flag = false;
     // console.log("[Info] Scanning for serialport mcu...")
     for (var i = 20; i >= 0; i--) {
-        var str = portName + i;
+        // var str = portName + i;
+        var str = portName;
         if (fs.existsSync(str)) {
             port = new SerialPort(str, {
                 baudRate: 115200,
@@ -93,6 +94,8 @@ setInterval(() => {
     var str = JSON.stringify(sensor);
     parserTest.emit('data', str);
 }, 1000);
+
+
 module.exports = {
     write: write
 }

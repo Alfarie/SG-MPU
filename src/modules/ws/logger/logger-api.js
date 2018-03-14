@@ -127,10 +127,11 @@ router.get('/sparkline', function (req, res) {
             max: 0,
             min: 9999,
             records: []
-        },
+        }
     };
     if(json.length > 0){
         delete json[0].datetime;
+        delete json[0].paracc;
         let keys = Object.keys(json[0]);
         json.forEach(d=>{
             keys.forEach(key=>{

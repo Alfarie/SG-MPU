@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var setting = require('../../models/setting');
 var SendDateTime = require('../../serial/command_dispatcher').SendDateTime
-
+var sensors = require('../../models/sensors');
 router.get('/', function(req,res){
     res.json(setting);
 });
@@ -21,4 +21,5 @@ router.post('/network', function(req,res){
 
     res.json({msg: 'success'})
 });
+
 module.exports = router;
