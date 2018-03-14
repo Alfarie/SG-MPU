@@ -5,5 +5,6 @@ module.exports = {
         key: '0810980364'
     },
     language: 'en',
-    portName: '/dev/ttyACM'
+    portName: '/dev/ttyACM',
+    production: false
 }

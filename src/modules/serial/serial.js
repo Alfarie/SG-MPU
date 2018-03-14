@@ -1,4 +1,5 @@
 var portName = require('../models/setting').portName;
+var production = require('../models/setting').production;
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 
@@ -77,23 +78,27 @@ var RandomFloat = function(min,max){
     return parseFloat(value.toFixed(2));
 }
 
-setInterval(() => {
-    var sensor = {
-        type: 'sensor',
-        data: {
-            par: RandomFloat(50,60),
-            vpd: parseInt(RandomFloat(1500,1600)),
-            temperature: RandomFloat(23,25),
-            humidity: RandomFloat(50,60),
-            soil: RandomFloat(50,60),
-            co2: RandomFloat(1000,1200),
-            date: moment().format('YYYY-MM-DD'),
-            time: moment().format('hh:mm:ss')
+if(!production){
+    console.log('[Info] Dummy Sensor reqeust and reply start..');
+    setInterval(() => {
+        var sensor = {
+            type: 'sensor',
+            data: {
+                par: RandomFloat(50,60),
+                vpd: parseInt(RandomFloat(1500,1600)),
+                temperature: RandomFloat(23,25),
+                humidity: RandomFloat(50,60),
+                soil: RandomFloat(50,60),
+                co2: RandomFloat(1000,1200),
+                date: moment().format('YYYY-MM-DD'),
+                time: moment().format('hh:mm:ss')
+            }
         }
-    }
-    var str = JSON.stringify(sensor);
-    parserTest.emit('data', str);
-}, 1000);
+        var str = JSON.stringify(sensor);
+        parserTest.emit('data', str);
+    }, 1000);
+}
+
 
 
 module.exports = {
