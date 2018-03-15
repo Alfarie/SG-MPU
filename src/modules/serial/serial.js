@@ -1,5 +1,5 @@
-var portName = require('../models/setting').portName;
-var production = require('../models/setting').production;
+var portName = require('../models/config').portName;
+var production = require('../models/config').production;
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 
@@ -14,9 +14,9 @@ var dispatch = require('./command_dispatcher');
 var CommandProcess = dispatch.CommandProcess;
 dispatch.setWrite(write);
 
+console.log("Scanning:" + portName)
 var scanPort = function () {
     var flag = false;
-    // console.log("[Info] Scanning for serialport mcu...")
     for (var i = 20; i >= 0; i--) {
         // var str = portName + i;
         var str = portName;
@@ -53,12 +53,7 @@ var scanPort = function () {
     return flag;
 }
 
-scanPort();
-setInterval(() => {
-    if (!isConnected) {
-        scanPort();
-    }
-}, 5000);
+
 
 write.subscribe(data => {
     if (isConnected) {
@@ -74,23 +69,25 @@ parserTest.on('data', (data) => {
     CommandProcess(data);
 });
 
-var RandomFloat = function(min,max){
-    var value = Math.random()*(max-min) + min;
+var RandomFloat = function (min, max) {
+    var value = Math.random() * (max - min) + min;
     return parseFloat(value.toFixed(2));
 }
 
-if(!production){
+
+
+if (!production) {
     console.log('[Info] Dummy Sensor reqeust and reply start..');
     setInterval(() => {
         var sensor = {
             type: 'sensor',
             data: {
-                par: RandomFloat(50,60),
-                vpd: parseInt(RandomFloat(1500,1600)),
-                temperature: RandomFloat(23,25),
-                humidity: RandomFloat(50,60),
-                soil: RandomFloat(50,60),
-                co2: RandomFloat(1000,1200),
+                par: RandomFloat(50, 60),
+                vpd: parseInt(RandomFloat(1500, 1600)),
+                temperature: RandomFloat(23, 25),
+                humidity: RandomFloat(50, 60),
+                soil: RandomFloat(50, 60),
+                co2: RandomFloat(1000, 1200),
                 date: moment().format('YYYY-MM-DD'),
                 time: moment().format('hh:mm:ss')
             }
@@ -98,6 +95,13 @@ if(!production){
         var str = JSON.stringify(sensor);
         parserTest.emit('data', str);
     }, 1000);
+} else {
+    scanPort();
+    setInterval(() => {
+        if (!isConnected) {
+            scanPort();
+        }
+    }, 5000);
 }
 
 
