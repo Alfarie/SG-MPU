@@ -43,6 +43,7 @@ var scanPort = function () {
                 isConnected = false;
             })
             parser.on('data', (data) => {
+                console.log(data);
                 CommandProcess(data);
             })
             flag = true;

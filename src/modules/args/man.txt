@@ -1,0 +1,7 @@
+SmartGrobot Projet: 
+Command line documentation
+
+
+--SerialPort=''  Select serial port 
+--Production     Disable all simulation data and recieve data from mcu on selected port
+
