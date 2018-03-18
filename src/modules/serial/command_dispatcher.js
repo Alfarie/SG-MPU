@@ -1,6 +1,6 @@
-var control = require('../models/control').control;
-var sensors = require('../models/sensors');
-var saveFile = require('../models/control.js').saveFile;
+var control = require('../../models/control').control;
+var sensors = require('../../models/sensors');
+var saveFile = require('../../models/control.js').saveFile;
 var write = null;
 
 
@@ -66,8 +66,7 @@ module.exports = {
                 sensors.sensor = jsonData.data;
                 let s  = parseInt(jsonData.data.time.split(':')[2]);
                 
-                if(s % 30 == 0){
-                    console.log(sensors.shortLogger.length);
+                if(s % 1 == 0){
                     sensors.shortLogger.push(jsonData.data);
                     if(sensors.shortLogger.length >= 20){
                         sensors.shortLogger.shift();

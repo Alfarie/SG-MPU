@@ -1,0 +1,7 @@
+{"datetime":"2018-03-15T20:58:01.000Z","temperature":24.68,"humidity":56.66,"par":54.37,"soil":51.41,"vpd":1591,"co2":1114.13,"paracc":0},
+{"datetime":"2018-03-15T20:58:06.000Z","temperature":24.99,"humidity":58.95,"par":52.84,"soil":52.83,"vpd":1567,"co2":1083.86,"paracc":0},
+{"datetime":"2018-03-15T20:58:11.000Z","temperature":24.02,"humidity":58.63,"par":50.86,"soil":54.64,"vpd":1534,"co2":1075.9,"paracc":0},
+{"datetime":"2018-03-15T20:58:16.000Z","temperature":23.52,"humidity":56.06,"par":50.81,"soil":54.44,"vpd":1511,"co2":1032.4,"paracc":0},
+{"datetime":"2018-03-15T20:58:21.000Z","temperature":24.95,"humidity":52.62,"par":54.95,"soil":52.78,"vpd":1595,"co2":1147.27,"paracc":0},
+{"datetime":"2018-03-15T20:58:26.000Z","temperature":23.37,"humidity":56.93,"par":52.26,"soil":59.16,"vpd":1541,"co2":1124.78,"paracc":0},
+{"datetime":"2018-03-15T20:58:31.000Z","temperature":24.38,"humidity":51.78,"par":59.8,"soil":57.15,"vpd":1584,"co2":1097.33,"paracc":0},

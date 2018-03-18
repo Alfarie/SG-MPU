@@ -1,6 +1,6 @@
-var config = require('../models/config');
+var config = require('../../models/config');
 var fs = require('fs');
-var dir = require('../models/config').root;
+var dir = require('../../models/config').root;
 var man = fs.readFileSync(__dirname + '/man.txt').toString();
 
 

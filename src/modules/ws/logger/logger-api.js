@@ -1,8 +1,8 @@
 var express = require('express')
 var router = express.Router();
 var fs = require('fs');
-var sensors = require('../../models/sensors');
-var dir = require('../../models/config').logger_dir;
+var sensors = require('../../../models/sensors');
+var dir = require('../../../models/config').logger_dir;
 var moment = require('moment');
 router.get('/short-logger', function (req, res) {
     res.json(sensors.shortLogger)
@@ -83,8 +83,6 @@ router.get('/shortlogger', function (req, res) {
 
 router.get('/sparkline', function (req, res) {
     /*
-        
-    
         [
             soil: {
                 max: 97,
@@ -93,58 +91,69 @@ router.get('/sparkline', function (req, res) {
             }
         ]
     */
-    let today = moment().format("YYYY-MM-DD");
-    let file = "DATE" + today;
-    let str = fs.readFileSync(dir + file).toString();
-    str = str.substring(0, str.length - 2);
-    str = "[" + str + "]";
-    str = str.trim(",\n");
-    let json = JSON.parse(str);
- 
-    let sparklineRecords = {
-        
-        soil: {
-            max: 0,
-            min: 9999,
-            records: []
-        },
-        vpd: {
-            max: 0,
-            min: 9999,
-            records: []
-        },
-        par: {
-            max: 0,
-            min: 9999,
-            records: []
-        },
-        temperature: {
-            max: 0,
-            min: 9999,
-            records: []
-        },
-        humidity: {
-            max: 0,
-            min: 9999,
-            records: []
-        }
-    };
-    if(json.length > 0){
-        delete json[0].datetime;
-        delete json[0].paracc;
-        let keys = Object.keys(json[0]);
-        json.forEach(d=>{
-            keys.forEach(key=>{
-                if(d[key] >= sparklineRecords[key].max) sparklineRecords[key].max = d[key];
-                if(d[key] <= sparklineRecords[key].min) sparklineRecords[key].min = d[key];
-                sparklineRecords[key].records.push(d[key]);
+
+    try {
+        let today = moment().format("YYYY-MM-DD");
+        let file = "DATE" + today;
+        let str = fs.readFileSync(dir + file).toString();
+        str = str.substring(0, str.length - 2);
+        str = "[" + str + "]";
+        str = str.trim(",\n");
+        let json = JSON.parse(str);
+
+        let sparklineRecords = {
+
+            soil: {
+                max: 0,
+                min: 9999,
+                records: []
+            },
+            vpd: {
+                max: 0,
+                min: 9999,
+                records: []
+            },
+            par: {
+                max: 0,
+                min: 9999,
+                records: []
+            },
+            temperature: {
+                max: 0,
+                min: 9999,
+                records: []
+            },
+            humidity: {
+                max: 0,
+                min: 9999,
+                records: []
+            },
+            co2: {
+                max: 0,
+                min: 9999,
+                records: []
+            }
+        };
+        if (json.length > 0) {
+            delete json[0].datetime;
+            delete json[0].paracc;
+            let keys = Object.keys(json[0]);
+            json.forEach(d => {
+                keys.forEach(key => {
+                    if (d[key] >= sparklineRecords[key].max) sparklineRecords[key].max = d[key];
+                    if (d[key] <= sparklineRecords[key].min) sparklineRecords[key].min = d[key];
+                    sparklineRecords[key].records.push(d[key]);
+                });
             });
-        });
+        } else {
+            json = []
+        }
+        res.json(sparklineRecords)
+    }catch(ex){
+        console.log(ex);
+        res.json([]);
     }
-    else{
-        json = []
-    }
-    res.json(sparklineRecords)
+
 })
 
 module.exports = router;

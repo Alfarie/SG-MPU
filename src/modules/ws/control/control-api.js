@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var control = require('../../models/control');
+var control = require('../../../models/control');
 var SendCommand = require('../../serial/command_dispatcher').SendCommand
 
 router.get('/', function(req,res){

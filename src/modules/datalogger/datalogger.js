@@ -1,9 +1,9 @@
-var sensors = require('../models/sensors');
+var sensors = require('../../models/sensors');
 var moment = require('moment');
 var fs = require('fs');
 var loop = null;
-// var loggerTime = 5000;
-var loggerTime = 5 * 1000 * 60;
+var loggerTime = 5000;
+// var loggerTime = 5 * 1000 * 60;
 
 var dir = __dirname.replace('src/modules/datalogger', 'Logger/');
 if (!fs.existsSync(dir)){
@@ -32,8 +32,10 @@ var LoggerLoop = function() {
             'par': sensor.par,
             'soil': sensor.soil,
             'vpd': sensor.vpd,
+            'co2': sensor.co2,
             'paracc': parseFloat( (sensors.parAccumulation / 1000).toFixed(2))
         }
+
         fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function(err) {
             if (err) console.log(err);
         });

@@ -1,11 +1,10 @@
 var io = null;
-
 var emit = (event,data)=>{
     // console.log(event,data);
     io.to('0x01').emit(event,data);
 }
 var EmitSensor = ()=>{
-    emit('SENSORS', require('../models/sensors').sensor);
+    emit('SENSORS', require('../../models/sensors').sensor);
 }
 module.exports = {
     socketio: function(socketio){

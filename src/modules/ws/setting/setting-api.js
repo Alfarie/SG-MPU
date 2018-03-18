@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var setting = require('../../models/setting');
+var setting = require('../../../models/setting');
 var SendDateTime = require('../../serial/command_dispatcher').SendDateTime
-var sensors = require('../../models/sensors');
+var sensors = require('../../../models/sensors');
 router.get('/', function(req,res){
     res.json(setting);
 });

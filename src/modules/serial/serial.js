@@ -1,5 +1,5 @@
-var portName = require('../models/config').portName;
-var production = require('../models/config').production;
+var portName = require('../../models/config').portName;
+var production = require('../../models/config').production;
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 
