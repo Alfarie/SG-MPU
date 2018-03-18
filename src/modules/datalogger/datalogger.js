@@ -2,8 +2,8 @@ var sensors = require('../../models/sensors');
 var moment = require('moment');
 var fs = require('fs');
 var loop = null;
-var loggerTime = 5000;
-// var loggerTime = 5 * 1000 * 60;
+// var loggerTime = 5000;
+var loggerTime = 5 * 1000 * 60;
 
 var dir = __dirname.replace('src/modules/datalogger', 'Logger/');
 if (!fs.existsSync(dir)){
@@ -41,5 +41,4 @@ var LoggerLoop = function() {
         });
     }
 }
-
 start();
