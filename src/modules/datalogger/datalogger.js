@@ -22,9 +22,11 @@ var stop = function() {
 var LoggerLoop = function() {
     var sensor = sensors.sensor;
     if (sensor != undefined) {
+        
         var t = sensor.time.split(":");
         var d = sensor.date.split("/");
-        var datestr = "DATE" + sensor.date
+        var datestr = "DATE" + moment(sensor.date).format('YYYY-DD-MM');
+        
         var loggerStr = {
             'datetime': moment(sensor.date + " " + sensor.time).toDate(),
             'temperature': sensor.temperature,

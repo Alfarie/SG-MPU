@@ -6,7 +6,7 @@ var dir = require('../../../models/config').logger_dir;
 var moment = require('moment');
 router.get('/short-logger', function (req, res) {
     res.json(sensors.shortLogger)
-})
+});
 
 router.get('/getdata', function (req, res) {
     var qstr = req.query;
@@ -16,9 +16,12 @@ router.get('/getdata', function (req, res) {
         })
         return;
     }
+
     var date = qstr.date;
     try {
-        var buffer = fs.readFileSync(dir + date);
+        var dt = date.replace('DATE', '');
+        var dt = moment(dt).format('YYYY-MM-DD');
+        var buffer = fs.readFileSync(dir + dt); // dir+ 'DATE2018-3-3'
         var str = buffer.toString();
         str = str.substring(0, str.length - 2);
         str = "[" + str + "]";
@@ -49,7 +52,9 @@ router.get('/checkdate', function (req, res) {
     fs.readdir(dir, function (err, files) {
         try {
             files.forEach(function (file) {
-
+                // 2018-3-18
+                // 2018-3-1
+                // 2018-03-18
                 let datefile = file.replace('DATE', '');
                 if (datefile.substring(0, 7) == MY) {
                     let buffer = fs.readFileSync(dir + file);
@@ -100,7 +105,6 @@ router.get('/sparkline', function (req, res) {
         str = "[" + str + "]";
         str = str.trim(",\n");
         let json = JSON.parse(str);
-
         let sparklineRecords = {
 
             soil: {
@@ -155,5 +159,4 @@ router.get('/sparkline', function (req, res) {
     }
 
 })
-
 module.exports = router;
