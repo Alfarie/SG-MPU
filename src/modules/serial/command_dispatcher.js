@@ -3,12 +3,16 @@ var sensors = require('../../models/sensors');
 var saveFile = require('../../models/control.js').saveFile;
 var write = null;
 
+function setWrite(w) {
+    write = w;
+    setInterval(RequestSensor, 1000);
+}
 
-var RequestSensor = function () {
+function RequestSensor() {
     write.next("{sensors}");
 }
 
-var SendDateTime = function (datetime) {
+function SendDateTime (datetime) {
     var date = datetime.date.split('-');
     var time = datetime.time.split(':');
     console.log(date, time);
@@ -29,7 +33,7 @@ var SendDateTime = function (datetime) {
     write.next(strcmd);
 }
 
-var ControlFilter = function (data) {
+function ControlFilter(data) {
     control[data.ch - 1].mode = data.mode;
     control[data.ch - 1].ch = data.ch;
     control[data.ch - 1].sensor = data.sensor;
@@ -46,40 +50,29 @@ var ControlFilter = function (data) {
     }
     saveFile(control);
 }
-module.exports = {
-    setWrite(wr) {
-        write = wr;
 
-        setInterval(RequestSensor, 1000);
-    },
-    CommandProcess: function (cmd) {
-
-
-        try {
-            var jsonData = JSON.parse(cmd);
-            if (jsonData.type == 'control') {
-                jsonData.data.forEach((d) => {
-                    ControlFilter(d);
-                });
-            }
-            if (jsonData.type == 'sensor') {
-                sensors.sensor = jsonData.data;
-                let s  = parseInt(jsonData.data.time.split(':')[2]);
-                
-                if(s % 1 == 0){
-                    sensors.shortLogger.push(jsonData.data);
-                    if(sensors.shortLogger.length >= 20){
-                        sensors.shortLogger.shift();
-                    }
-                }
-                
-            }
-        } catch (e) {
-
+function CommandProcess(cmd){
+    try {
+        var jsonData = JSON.parse(cmd);
+        if (jsonData.type == 'control') {
+            jsonData.data.forEach((d) => {
+                ControlFilter(d);
+            });
         }
-    },
-    SendCommand(chData, updateChannel) {
-        var ch = chData.ch;
+        if (jsonData.type == 'sensor') {
+            sensors.sensor = jsonData.data;
+            let s  = parseInt(jsonData.data.time.split(':')[2]);
+            if(s % 1 == 0){
+                sensors.shortLogger.push(jsonData.data);
+                if(sensors.shortLogger.length >= 20){
+                    sensors.shortLogger.shift();
+                }
+            }
+        }
+    } catch (e) { }
+}
+function SendCommand(chData, updateChannel){
+    var ch = chData.ch;
         var mode = chData.mode;
         var strcmd = ""
 
@@ -114,7 +107,10 @@ module.exports = {
         }
         ControlFilter(chData);
         write.next(strcmd);
-
-    },
-    SendDateTime: SendDateTime
+}
+module.exports = {
+    setWrite,
+    CommandProcess,
+    SendCommand,
+    SendDateTime
 };

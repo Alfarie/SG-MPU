@@ -8,13 +8,14 @@ process.argv.forEach(function (val, index, array) {
 });
 
 
-
 if (!exit) {
     var ws = require('./modules/ws/ws');
     var serial = require('./modules/serial/serial');
     var logger = require('./modules/datalogger/datalogger.js')
 
+    serial.Initialize();
+    
     ws.http.listen(3000, function () {
-        console.log('listening *:' + 3000);
+        console.log('[Info] listening *:' + 3000);
     });
 }

@@ -11,7 +11,7 @@ if (!fs.existsSync(dir)){
 }
 
 var start = function() {
-    console.log("LOGGER TIME : " + loggerTime);
+    console.log("[Info] Logging time : " + loggerTime);
     loop = setInterval(LoggerLoop, loggerTime);
 }
 

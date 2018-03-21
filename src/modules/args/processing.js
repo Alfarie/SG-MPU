@@ -16,6 +16,7 @@ var argProcess = function(arg){
     }
 
     else if(arg.startsWith("--Production") || arg.startsWith('-prod')){
+        console.log('[Info] Production');
         config.production = true;
     }
 
