@@ -5,12 +5,17 @@ var man = fs.readFileSync(__dirname + '/man.txt').toString();
 
 
 var argProcess = function(arg){
-    if(arg.startsWith("--SerialPort")){
+    if(arg.startsWith("--SerialPort") || arg.startsWith('-sp')){
         let port = arg.split("=")[1];
         config.portName = port;
     }
 
-    else if(arg.startsWith("--Production")){
+    else if(arg.startsWith("--Scan")){
+        let port = arg.split("=")[1];
+        config.portName = port;
+    }
+
+    else if(arg.startsWith("--Production") || arg.startsWith('-prod')){
         config.production = true;
     }
 

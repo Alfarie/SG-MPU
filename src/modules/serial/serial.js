@@ -14,6 +14,8 @@ var dispatch = require('./command_dispatcher');
 var CommandProcess = dispatch.CommandProcess;
 dispatch.setWrite(write);
 
+
+
 console.log("Scanning:" + portName)
 var scanPort = function () {
     var flag = false;
