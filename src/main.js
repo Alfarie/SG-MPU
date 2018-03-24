@@ -1,4 +1,4 @@
-var args = require('./modules/args/processing');
+var args = require('./args/processing');
 var exit = false;
 process.argv.forEach(function (val, index, array) {
     console.log(index + ': ' + val);
@@ -7,15 +7,29 @@ process.argv.forEach(function (val, index, array) {
     }
 });
 
-
 if (!exit) {
-    var ws = require('./modules/ws/ws');
-    var serial = require('./modules/serial/serial');
-    var logger = require('./modules/datalogger/datalogger.js')
-
-    serial.Initialize();
+    var ws = require('./ws/ws');
+    var config = require('./args/config');
+    var serial = require('./serial/serial');
     
-    ws.http.listen(3000, function () {
-        console.log('[Info] listening *:' + 3000);
+    serial.Initialize();
+
+    var mcu = require('./mcu/mcu');
+    mcu.SetSerialPort(serial);
+
+    if(!config.production){
+        var demo = require('./mcu/demo');
+        demo.Initialize(mcu);
+    }
+
+    mcu.Subject.GetSensorsSubject.subscribe( sensors =>{
+        ws.io.to('0x01').emit('SENSORS', sensors);
+    })
+
+    var logger = require('./datalogger/datalogger');
+    logger.Initialize(mcu,config);
+
+    ws.http.listen(ws.port, function () {
+        console.log('[Info] listening *:' + ws.port);
     });
 }
