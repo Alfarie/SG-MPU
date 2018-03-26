@@ -48,39 +48,7 @@ router.get('/finds/loggers/months', function (req, res) {
         });
         return;
     }
-    var MY = req.query.my;
-    var dateList = [];
 
-    fs.readdir(dir, function (err, files) {
-        try {
-            files.forEach(function (file) {
-                // 2018-3-18
-                // 2018-3-1
-                // 2018-03-18
-                let datefile = file.replace('DATE', '');
-                if (datefile.substring(0, 7) == MY) {
-                    let buffer = fs.readFileSync(dir + file);
-                    let str = buffer.toString();
-                    str = str.substring(0, str.length - 2);
-                    str = "[" + str + "]";
-                    str = str.trim(",\n");
-                    let json = JSON.parse(str);
-                    let data = {
-                        file: file,
-                        date: moment(datefile).format('YYYY-MM-DD'),
-                        records: json.length
-                    }
-                    dateList.push(data);
-                }
-            });
-            res.json(dateList);
-            delete dateList;
-            res.end();
-        } catch (ex) {
-            console.log(ex);
-            res.json([])
-        }
-    });
 })
 
 
