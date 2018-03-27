@@ -1,12 +1,13 @@
 var controlModel = require('./models/control');
 var sensorModel = require('./models/sensors');
+var statusModel = require('./models/status');
 var config = require('../args/config');
 
 
 var serialport;
 var read,write;
 var commands;
-var sensorRequestSetInterlval;
+var realTimeRequestLoop;
 
 var Rx = require('rxjs');
 var GetSensorsSubject = new Rx.Subject();
@@ -20,12 +21,20 @@ function GetSensors(){
     return sensorModel.sensors;
 }
 
-function RequestSensors(cmd){
+function GetStatus(){
+    return statusModel;
+}
+
+function RequestRealTimeData(cmd){
     if(cmd){
-        sensorRequest = setInterval( ()=>{write.next('{sensors}')},1000);
+        realTimeRequestLoop = setInterval( ()=>{
+            write.next('{sensors}')
+            write.next('{control,channelstatus}')
+            write.next('{freememory}')
+        },1000);
     }
     else{
-        clearInterval(sensorRequest);
+        clearInterval(realTimeRequestLoop);
     }
 }
 
@@ -55,10 +64,11 @@ function SetSerialPort(serial){
     });
 }
 
+//check is json format or plaintext
 function CommandVerify(cmd){
     try{
         let json = JSON.parse(cmd);
-        ExecCommand(json);
+        ExecJsonCommand(json);
     }   
     catch(ex){
         // console.log(ex);
@@ -66,14 +76,18 @@ function CommandVerify(cmd){
             //Initialization Part
             console.log('[Info] Mcu status: RDY!');
             RequestControlSequence();
-            RequestSensors(true);
+            RequestRealTimeData(true);
+        }
+        else if(cmd.startsWith("INFO")){
+            let str = cmd.replace('INFO', '');
+            console.log('[Info] Mcu board info: ', str);
         }
         else if(cmd == 'UPD'){
             console.log('[Info] Mcu status: UPD!');
             RequestControlSequence();
         }
         else if(cmd == 'DONE'){
-            console.log('[Info] Mcu status: REQUEST DONE!');
+            console.log('[Info] Mcu status: REQUESTING DONE!');
             McuUpdated.next(true);
         }
         else{
@@ -82,7 +96,7 @@ function CommandVerify(cmd){
     }
 }
 
-function ExecCommand(json){
+function ExecJsonCommand(json){
     var type = json.type;
     var data = json.data;
     // control setting format: 'control-[type]'
@@ -100,10 +114,12 @@ function ExecCommand(json){
         console.log('[Info] Recieved: ' + type);
     }
     else if( type == 'channel-status'){
+        
         data.forEach( (d,ind)=>{
             controlModel.control[ind].ch = ind + 1;
             controlModel.control[ind].mode = d.mode;
             controlModel.control[ind].sensor = d.sensor;
+            statusModel.gpio[ind] = d.status;
         })
     }
     else if( type == 'sensors'){
@@ -112,9 +128,14 @@ function ExecCommand(json){
         */
        sensorModel.sensors = data;
        GetSensorsSubject.next(data);
+       
+    }
+    else if(type == 'free-memory'){
+        statusModel.freeMemory = data;
     }
 }
 
+//use by control-api.js
 function SendCommand(chData){
     var ch = chData.ch;
     var mode = chData.mode;
@@ -153,8 +174,9 @@ module.exports = {
     SetSerialPort,
     GetControl,
     GetSensors,
+    GetStatus,
     SendCommand,
-    ExecCommand,
+    ExecJsonCommand,
     Subject: {
         GetSensorsSubject,
         McuUpdated

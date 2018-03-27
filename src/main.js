@@ -24,6 +24,8 @@ if (!exit) {
 
     mcu.Subject.GetSensorsSubject.subscribe( sensors =>{
         ws.io.to('0x01').emit('SENSORS', sensors);
+        ws.io.to('0x01').emit('MEMORY', mcu.GetStatus().freeMemory);
+        ws.io.to('0x01').emit('GPIO', mcu.GetStatus().gpio);
     })
 
     var logger = require('./datalogger/datalogger');
