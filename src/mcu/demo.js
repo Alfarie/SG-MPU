@@ -23,7 +23,7 @@ function Loop(){
             time: moment().format('hh:mm:ss')
         }
     }
-    mcu.ExecCommand(sensor);
+    mcu.ExecJsonCommand(sensor);
 }
 
 function StartSensorRequest(){

@@ -20,17 +20,16 @@
             "name": "Demo Run",
             "program": "${workspaceFolder}/src/main.js",
             "args": [
-                
+                "--loggerTime=1000"
             ]
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "datalogger test",
-            "program": "${workspaceFolder}/src/datalogger/datalogger.js",
+            "name": "DBS Test",
+            "program": "${workspaceFolder}/src/datalogger/dbs.js",
             "args": [
-                "-sp=/dev/ttyACM0",
-                "-prod"
+               
             ]
         }
     ]

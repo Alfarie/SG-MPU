@@ -1,11 +1,14 @@
 var err;
 
 var moment = require('moment');
+var dbs = require('./dbs');
 var fs = require('fs');
 var loop = null;
 var config, mcu;
 var dir, loggerTime;
 var shortLogger = [];
+
+var sparklineModel = JSON.parse(fs.readFileSync(__dirname + '/sparkline.json').toString());
 
 var start = function () {
     if (!err) {
@@ -31,6 +34,7 @@ var LoggerLoop = function () {
         var d = sensor.date.split("/");
         var datestr = "DATE" + moment(sensor.date).format('YYYY-MM-DD');
         var loggerStr = {
+            'timestamp': moment(sensor.date + " " + sensor.time).toISOString(),
             'datetime': moment(sensor.date + " " + sensor.time).toDate(),
             'temperature': sensor.temperature,
             'humidity': sensor.humidity,
@@ -40,9 +44,12 @@ var LoggerLoop = function () {
             'co2': sensor.co2,
             'paracc': parseFloat((sensor.parAccumulation / 1000).toFixed(2))
         }
-        fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function (err) {
-            if (err) console.log(err);
-        });
+        // fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function (err) {
+        //     if (err) console.log(err);
+        // });
+        dbs.InsertOne("Logger", loggerStr).then(res => {
+
+        })
     }
 }
 
@@ -58,38 +65,7 @@ function GetSparkLogger() {
         str = "[" + str + "]";
         str = str.trim(",\n");
         let json = JSON.parse(str);
-        let sparklineRecords = {
-            soil: {
-                max: 0,
-                min: 9999,
-                records: []
-            },
-            vpd: {
-                max: 0,
-                min: 9999,
-                records: []
-            },
-            par: {
-                max: 0,
-                min: 9999,
-                records: []
-            },
-            temperature: {
-                max: 0,
-                min: 9999,
-                records: []
-            },
-            humidity: {
-                max: 0,
-                min: 9999,
-                records: []
-            },
-            co2: {
-                max: 0,
-                min: 9999,
-                records: []
-            }
-        };
+        let sparklineRecords = sparklineModel;
         if (json.length > 0) {
             delete json[0].datetime;
             delete json[0].paracc;
@@ -131,7 +107,8 @@ function GetLoggerByDate(date) {
         };
     }
 }
-function GetShortLogger(){
+
+function GetShortLogger() {
     return shortLogger;
 }
 
@@ -150,10 +127,63 @@ function Initialize(p_mcu, p_config) {
 }
 
 
+function GetLoggerByDateDB(dt) {
+    /*
+        dt: 'DATEYYYY-MM-DD'
+    */
+    return new Promise((resolve, reject) => {
+        var date = dt.replace('DATE', '');
+        var upper = moment(date).add(1, 'days').toISOString();
+        var lower = moment(date).toISOString();
+        dbs.Find("Logger", {
+            timestamp: {
+                $gte: lower,
+                $lt: upper
+            }
+        }).then(res => {
+            resolve(res);
+        });
+    })
+}
+
+function GetSparkLoggerDB() {
+    /*
+        dt: 'DATEYYYY-MM-DD'
+    */
+    return new Promise((resolve, reject) => {
+        var sensor = mcu.GetSensors();
+        var date = sensor.date;
+        dbs.Find("Logger", {
+            timestamp: {
+                $gte: moment(date).toISOString(),
+                $lt: moment(date).add(1, 'days').toISOString()
+            }
+        }).then(json => {
+            let sparklineRecords = sparklineModel;
+            if (json.length > 0) {
+                delete json[0].datetime;
+                delete json[0].paracc;
+                delete json[0]._id;
+                delete json[0].timestamp;
+                let keys = Object.keys(json[0]);
+                json.forEach(d => {
+                    keys.forEach(key => {
+                        if (d[key] >= sparklineRecords[key].max) sparklineRecords[key].max = d[key];
+                        if (d[key] <= sparklineRecords[key].min) sparklineRecords[key].min = d[key];
+                        sparklineRecords[key].records.push(d[key]);
+                    });
+                });
+                resolve(sparklineRecords);
+            }
+        });
+    });
+}
 
 module.exports = {
     Initialize,
     GetShortLogger,
     GetLoggerByDate,
-    GetSparkLogger
+    GetSparkLogger,
+    GetLoggerByDateDB,
+    GetSparkLoggerDB
 }

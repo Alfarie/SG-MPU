@@ -12,6 +12,18 @@ router.get('/finds/date', function (req, res) {
     }
     res.json(logger.GetLoggerByDate(qstr.date));
 });
+router.get('/finds/db/date', function (req, res) {
+    var qstr = req.query;
+    if (qstr.date == undefined) {
+        res.json({
+            "status": "query error"
+        })
+        return;
+    }
+    logger.GetLoggerByDateDB(qstr.date).then(data=>{
+        res.json(data);
+    })
+});
 
 router.get('/finds/date/csv', function (req, res) {
     var qstr = req.query;
@@ -36,10 +48,10 @@ router.get('/finds/short', function (req, res) {
 });
 
 router.get('/finds/sparks', function (req, res) {
-    res.json(logger.GetSparkLogger());
-})
-
-
+    logger.GetSparkLoggerDB().then(data=>{
+        res.json(data);
+    });
+});
 
 router.get('/finds/loggers/months', function (req, res) {
     if (req.query.my == undefined) {

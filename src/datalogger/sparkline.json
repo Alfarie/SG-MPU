@@ -1,0 +1,32 @@
+{
+    "soil": {
+        "max": 0,
+        "min": 9999,
+        "records": []
+    },
+    "vpd": {
+        "max": 0,
+        "min": 9999,
+        "records": []
+    },
+    "par": {
+        "max": 0,
+        "min": 9999,
+        "records": []
+    },
+    "temperature": {
+        "max": 0,
+        "min": 9999,
+        "records": []
+    },
+    "humidity": {
+        "max": 0,
+        "min": 9999,
+        "records": []
+    },
+    "co2": {
+        "max": 0,
+        "min": 9999,
+        "records": []
+    }
+}
