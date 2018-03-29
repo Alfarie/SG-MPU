@@ -30,6 +30,7 @@ function RequestRealTimeData(cmd){
         realTimeRequestLoop = setInterval( ()=>{
             write.next('{sensors}')
             write.next('{control,channelstatus}')
+            write.next('{channelparacc}')
             write.next('{freememory}')
         },1000);
     }
@@ -114,7 +115,6 @@ function ExecJsonCommand(json){
         console.log('[Info] Recieved: ' + type);
     }
     else if( type == 'channel-status'){
-        
         data.forEach( (d,ind)=>{
             controlModel.control[ind].ch = ind + 1;
             controlModel.control[ind].mode = d.mode;
@@ -128,7 +128,16 @@ function ExecJsonCommand(json){
         */
        sensorModel.sensors = data;
        GetSensorsSubject.next(data);
-       
+    }
+    else if(type == 'channel-paracc'){
+        /*
+            data:  Array(4) [Object, Object, Object, Object]
+                        acc:0
+                        isuse:0
+                        max:1500000
+                        mode:0
+        */
+       statusModel.paracc = data;
     }
     else if(type == 'free-memory'){
         statusModel.freeMemory = data;
@@ -163,9 +172,8 @@ function SendCommand(chData){
     } else if (mode == 4) {
         //{irrigation,ch, irr_mode,soil_up, soil_low, par_acc}
         let irr = chData.irrigation;
-        strcmd = "{irrigation," + ch + "," + irr.mode + "," + irr.soil_upper + "," + irr.soil_lower + "," + irr.par_accum + "}";
+        strcmd = "{irrigation," + ch + "," + irr.mode + "," + irr.soil_upper + "," + irr.soil_lower + "," + irr.par_accum + "," + irr.working + "}";
     }
-    console.log('[Info] Updating: ' + ch + ' ' + mode);
     console.log(strcmd);
     write.next(strcmd);
 }

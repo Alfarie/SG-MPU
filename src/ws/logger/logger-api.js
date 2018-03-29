@@ -39,8 +39,6 @@ router.get('/finds/sparks', function (req, res) {
     res.json(logger.GetSparkLogger());
 })
 
-
-
 router.get('/finds/loggers/months', function (req, res) {
     if (req.query.my == undefined) {
         res.json({
@@ -48,7 +46,6 @@ router.get('/finds/loggers/months', function (req, res) {
         });
         return;
     }
-
 })
 
 
