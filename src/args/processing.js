@@ -13,6 +13,11 @@ var argProcess = function(arg){
         console.log('[Info] Production');
         config.production = true;
     }
+
+    else if(arg.startsWith("--loggerTime") || arg.startsWith('-logger')){
+        let time = arg.split("=")[1];
+        config.loggerTime = time;
+    }
     
     else if(arg.startsWith("--man")){
         console.log(man);

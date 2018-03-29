@@ -15,8 +15,9 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-var root = path.join(path.resolve(__dirname, '../../../build'));
+var root = path.join(path.resolve(__dirname, '../../dist/'));
 app.use(express.static(root));
+
 
 var port = 3000;
 
@@ -29,6 +30,9 @@ app.use('/logger/', loggerApi);
 // var settingApi = require('./setting/setting-api');
 // app.use('/setting/', settingApi);
 
+app.get('*', function(req,res){
+    res.redirect('/');
+});
 module.exports = {
     http,
     io,
