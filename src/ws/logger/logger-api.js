@@ -21,7 +21,7 @@ router.get('/finds/date/csv', function (req, res) {
         })
     }
     var json = logger.GetLoggerByDate(qstr.date);
-    console.log(json);
+    // console.log(json);
 
     let keys = Object.keys(json[0]);
     res.csv(
