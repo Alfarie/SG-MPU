@@ -6,14 +6,19 @@ var RandomFloat = function (min, max) {
     return parseFloat(value.toFixed(2));
 }
 
-function Loop(){
+function Loop() {
+    Sensors();
+    ChannelParAcc();
+}
+
+function Sensors() {
     let par = RandomFloat(50, 60);
     parAcc += par;
     var sensor = {
         type: 'sensors',
         data: {
             par: par,
-            parAccumulation: parAcc ,
+            parAccumulation: parAcc,
             vpd: parseInt(RandomFloat(1500, 1600)),
             temperature: RandomFloat(23, 25),
             humidity: RandomFloat(50, 60),
@@ -26,11 +31,37 @@ function Loop(){
     mcu.ExecJsonCommand(sensor);
 }
 
-function StartSensorRequest(){
-    setInterval( Loop , 1000);
+
+var acc = [0,0]
+function ChannelParAcc() {
+        /*
+            data:  Array(4) [Object, Object, Object, Object]
+                        acc:0
+                        isuse:0
+                        max:1500000
+                        mode:0
+        */
+    acc[0] += 1000;
+    acc[1] += 500;
+    var s = [
+        { acc:acc[0], isuse: 1, max: 1000000, mode:1},
+        { acc: 0, isuse: 0, max: 1000000, mode:0},
+        { acc:acc[1], isuse: 1, max: 200000, mode:1},
+        { acc: 0, isuse: 0, max: 1000000, mode:0}
+    ]
+
+    var data = {
+        type: 'channel-paracc',
+        data: s
+    }
+    mcu.ExecJsonCommand(data);
 }
 
-function Initialize(Mcu){
+function StartSensorRequest() {
+    setInterval(Loop, 1000);
+}
+
+function Initialize(Mcu) {
     console.log('[Info] Demo Version.');
     mcu = Mcu;
     StartSensorRequest();
