@@ -32,22 +32,56 @@ function Sensors() {
 }
 
 
-var acc = [0,0]
+var parval = [{
+        acc: 0,
+        max: 1000000
+    },
+    {
+        acc: 0,
+        max: 200000
+    }
+]
+
 function ChannelParAcc() {
-        /*
-            data:  Array(4) [Object, Object, Object, Object]
-                        acc:0
-                        isuse:0
-                        max:1500000
-                        mode:0
-        */
-    acc[0] += 1000;
-    acc[1] += 500;
-    var s = [
-        { acc:acc[0], isuse: 1, max: 1000000, mode:1},
-        { acc: 0, isuse: 0, max: 1000000, mode:0},
-        { acc:acc[1], isuse: 1, max: 200000, mode:1},
-        { acc: 0, isuse: 0, max: 1000000, mode:0}
+    /*
+        data:  Array(4) [Object, Object, Object, Object]
+                    acc:0
+                    isuse:0
+                    max:1500000
+                    mode:0
+    */
+   parval[0].acc += 1000;
+   parval[1].acc += 500;
+
+   parval.forEach( par =>{
+       if(par.acc >= par.max) par.acc =0;
+   });
+
+
+    var s = [{
+            acc: parval[0].acc,
+            isuse: 1,
+            max:  parval[0].max,
+            mode: 1
+        },
+        {
+            acc: 0,
+            isuse: 0,
+            max: 1000000,
+            mode: 0
+        },
+        {
+            acc:  parval[1].acc,
+            isuse: 1,
+            max:  parval[1].max,
+            mode: 1
+        },
+        {
+            acc: 0,
+            isuse: 0,
+            max: 1000000,
+            mode: 0
+        }
     ]
 
     var data = {
