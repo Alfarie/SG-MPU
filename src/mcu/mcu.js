@@ -178,6 +178,28 @@ function SendCommand(chData){
     write.next(strcmd);
 }
 
+function SendDateTime(datetime){
+    /*
+        dt: {date: "2017-01-01", time: "10:46"}
+    */
+   var date = datetime.date.split('-');
+   var time = datetime.time.split(':');
+   var payload = {
+       day: parseInt(date[2]),
+       month: parseInt(date[1]),
+       year: parseInt(date[0]) % 2000,
+       hour: parseInt(time[0]),
+       min: parseInt(time[1])
+   }
+
+   let strcmd = '{datetime,' + payload.day + ',' +
+       payload.month + ',' +
+       payload.year + ',' +
+       payload.hour + ',' +
+       payload.min + '}';
+   write.next(strcmd);
+}
+
 module.exports = {
     SetSerialPort,
     GetControl,
@@ -185,6 +207,7 @@ module.exports = {
     GetStatus,
     SendCommand,
     ExecJsonCommand,
+    SendDateTime,
     Subject: {
         GetSensorsSubject,
         McuUpdated

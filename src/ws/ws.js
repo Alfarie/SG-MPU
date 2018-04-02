@@ -27,8 +27,8 @@ app.use('/control/', controlApi);
 var loggerApi = require('./logger/logger-api');
 app.use('/logger/', loggerApi);
 
-// var settingApi = require('./setting/setting-api');
-// app.use('/setting/', settingApi);
+var settingApi = require('./setting/setting-api');
+app.use('/setting/', settingApi);
 
 app.get('*', function(req,res){
     res.redirect('/');
