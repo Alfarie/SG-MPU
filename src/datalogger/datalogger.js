@@ -32,7 +32,7 @@ var LoggerLoop = function () {
         var d = sensor.date.split("/");
         var datestr = "DATE" + moment(sensor.date).format('YYYY-MM-DD');
         var loggerStr = {
-            'datetime': moment(sensor.date + " " + sensor.time).format('YYYY-MM-DD hh:mm:ss'),
+            'datetime': moment(sensor.date + " " + sensor.time).format('YYYY-MM-DD HH:mm:ss'),
             'temperature': sensor.temperature,
             'humidity': sensor.humidity,
             'par': sensor.par,

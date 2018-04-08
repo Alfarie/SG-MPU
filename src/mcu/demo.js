@@ -25,7 +25,7 @@ function Sensors() {
             soil: RandomFloat(50, 60),
             co2: RandomFloat(1000, 1200),
             date: moment().format('YYYY-MM-DD'),
-            time: moment().format('hh:mm:ss')
+            time: moment().format('HH:mm:ss')
         }
     }
     mcu.ExecJsonCommand(sensor);
