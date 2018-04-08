@@ -44,7 +44,7 @@ var LoggerLoop = function () {
         // fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function (err) {
         //     if (err) console.log(err);
         // });
-        let sql = `INSERT INTO sensors_logger(timestamp,datetime,vpd,soil,temp,humi,co2,par,paracc)
+        let sql = `INSERT INTO sensors_logger(timestamp,datetime,vpd,soil,temperature,humidity,co2,par,paracc)
             VALUES(?,?,?,?,?,?,?,?,?);`
         let params = [
             moment(sensor.date + " " + sensor.time).unix(), 

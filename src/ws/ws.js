@@ -6,7 +6,6 @@ var path = require('path');
 var io = require('socket.io')(http);
 
 io = require('./socket').socketio(io);
-
 var cors = require('cors');
 app.use(cors());
 

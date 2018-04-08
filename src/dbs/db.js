@@ -30,8 +30,8 @@ function Init(db){
                         datetime TEXT NOT NULL,
                         vpd NUMBER NOT NULL,
                         soil NUMBER NOT NULL,
-                        temp NUMBER NOT NULL,
-                        humi NUMBER NOT NULL,
+                        temperature NUMBER NOT NULL,
+                        humidity NUMBER NOT NULL,
                         co2 NUMBER NOT NULL,
                         par NUMBER NOT NULL,
                         paracc NUMBER NOT NULL)
