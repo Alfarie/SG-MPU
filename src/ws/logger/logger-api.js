@@ -10,7 +10,11 @@ router.get('/finds/date', function (req, res) {
         })
         return;
     }
-    res.json(logger.GetLoggerByDate(qstr.date));
+    logger.GetLoggerByDate(qstr.date).then(
+        rows => {
+            res.json(rows);
+        }
+    )
 });
 
 router.get('/finds/date/csv', function (req, res) {
@@ -20,16 +24,16 @@ router.get('/finds/date/csv', function (req, res) {
             "status": "query error"
         })
     }
-    var json = logger.GetLoggerByDate(qstr.date);
+    
     // console.log(json);
-
-    let keys = Object.keys(json[0]);
-    res.csv(
-        json, {
-            fields: keys
-        });
+    logger.GetLoggerByDate(qstr.date).then(rows => {
+        let keys = Object.keys(rows[0]);
+        res.csv(
+            rows, {
+                fields: keys
+            });
+    });
 });
-
 
 router.get('/finds/short', function (req, res) {
     res.json(logger.GetShortLogger());
@@ -46,8 +50,5 @@ router.get('/finds/loggers/months', function (req, res) {
         });
         return;
     }
-})
-
-
-
+});
 module.exports = router;
