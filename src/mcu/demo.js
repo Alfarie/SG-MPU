@@ -30,8 +30,6 @@ function Sensors() {
     }
     mcu.ExecJsonCommand(sensor);
 }
-
-
 var parval = [{
         acc: 0,
         max: 1000000
