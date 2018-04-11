@@ -168,7 +168,7 @@ function SendCommand(chData){
     } else if (mode == 3) {
         let setbound = chData.setbound;
         // {setbound, channel, upper,lower,sensor}
-        strcmd = "{setbound," + ch + "," + setbound.lower + "," + setbound.upper + "," + chData.sensor + "}";
+        strcmd = "{setbound," + ch + "," + setbound.upper + "," + setbound.lower + "," + chData.sensor + "}";
     } else if (mode == 4) {
         //{irrigation,ch, irr_mode,soil_up, soil_low, par_acc}
         let irr = chData.irrigation;

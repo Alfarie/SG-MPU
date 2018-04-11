@@ -11,7 +11,7 @@
             "name": "Production Run",
             "program": "${workspaceFolder}/src/main.js",
             "args": [
-                "-sp=/dev/ttyACM0",
+                "-sp=/dev/ttyACM1",
                 "-prod",
                 "--loggerTime=1000"
             ]
