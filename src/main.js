@@ -27,8 +27,7 @@ if (!exit) {
         ws.io.to('0x01').emit('MEMORY', mcu.GetStatus().freeMemory);
         ws.io.to('0x01').emit('GPIO', mcu.GetStatus().gpio);
         ws.io.to('0x01').emit('PARACC', mcu.GetStatus().paracc);
-        
-    })
+    });
 
     var logger = require('./datalogger/datalogger');
     logger.Initialize(mcu,config);
