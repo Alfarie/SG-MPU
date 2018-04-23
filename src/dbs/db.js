@@ -12,7 +12,7 @@ if (!fs.existsSync(dbdir)) {
 function Connect(){
     return new Promise((resolve,reject) =>{
         resolve(
-                new sqlite3.Database(dbpath, (err) => {
+                new sqlite3.Database(dbpath, sqlite3.OPEN_READWRITE, (err) => {
                 if (err) {
                     return console.error(err.message);
                 }
