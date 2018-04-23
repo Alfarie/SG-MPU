@@ -57,6 +57,7 @@ function ExecSql(sql, params){
     })
     .catch(err=>{
         console.log(err);
+        db.close();
     })
 }
 
