@@ -34,7 +34,8 @@ function Init(db){
                         humidity NUMBER NOT NULL,
                         co2 NUMBER NOT NULL,
                         par NUMBER NOT NULL,
-                        paracc NUMBER NOT NULL)
+                        paracc NUMBER NOT NULL,
+                        light NUMBER NOT NULL)
                     `
         db.run(sql, (err)=>{
             if(err){

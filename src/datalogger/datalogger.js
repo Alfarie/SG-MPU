@@ -39,13 +39,14 @@ var LoggerLoop = function () {
             'soil': sensor.soil,
             'vpd': sensor.vpd,
             'co2': sensor.co2,
-            'paracc': parseFloat((sensor.parAccumulation / 1000).toFixed(2))
+            'paracc': parseFloat((sensor.parAccumulation / 1000).toFixed(2)),
+            'light': sensor.light
         }
         // fs.appendFile(dir + datestr, JSON.stringify(loggerStr) + ",\n", function (err) {
         //     if (err) console.log(err);
         // });
-        let sql = `INSERT INTO sensors_logger(timestamp,datetime,vpd,soil,temperature,humidity,co2,par,paracc)
-            VALUES(?,?,?,?,?,?,?,?,?);`
+        let sql = `INSERT INTO sensors_logger(timestamp,datetime,vpd,soil,temperature,humidity,co2,par,paracc,light)
+            VALUES(?,?,?,?,?,?,?,?,?,?);`
         let params = [
             moment(sensor.date + " " + sensor.time).unix(), 
             loggerStr.datetime,
@@ -55,7 +56,8 @@ var LoggerLoop = function () {
             loggerStr.humidity,
             loggerStr.co2,
             loggerStr.par,
-            loggerStr.paracc
+            loggerStr.paracc,
+            loggerStr.light
         ]
         db.ExecSql(sql,params)
     }
