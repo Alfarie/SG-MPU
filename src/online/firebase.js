@@ -77,31 +77,40 @@ online.Connection.asObservable().subscribe(data => {
 function UpdateSensors(sensors) {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/sensors';
-        db.ref(path).set(sensors);
+        try {
+            db.ref(path).set(sensors);
+        } catch (error) {
+            console.log(sensors, error);
+        }
+
     }
 }
 
-function UpdateControl(control){
+function UpdateControl(control) {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/control';
-        db.ref(path).set(control);
+        try {
+            db.ref(path).set(control);
+        } catch (error) {
+            console.log(control, error);
+        }
     }
 }
-function UpdateMcuStatus(mcu){
+function UpdateMcuStatus(mcu) {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/mcu-status';
         db.ref(path).set(mcu);
     }
 }
 
-function UpdateMemoryStatus(mem){
+function UpdateMemoryStatus(mem) {
     if (auth.currentUser) {
         let path = '/memory-usage/' + mid + '/memory';
         db.ref(path).push(mem);
     }
 }
 
-function UpdateDateTime(datetime){
+function UpdateDateTime(datetime) {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/datetime/current';
         db.ref(path).set(datetime);
@@ -109,20 +118,20 @@ function UpdateDateTime(datetime){
 }
 
 
-function UpdateSensorsDB(data){
+function UpdateSensorsDB(data) {
     if (auth.currentUser) {
-        let path = '/dbs/' + mid + '/'+ data.date;
+        let path = '/dbs/' + mid + '/' + data.date;
         db.ref(path).push(data);
     }
 }
 
-function UpdateMPUTime(){
+function UpdateMPUTime() {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/datetime/mpu';
-        db.ref(path).set( {
-            date:  moment().format('YYYY-MM-DD'),
-            time:   moment().format('HH:mm:ss')
-        } );
+        db.ref(path).set({
+            date: moment().format('YYYY-MM-DD'),
+            time: moment().format('HH:mm:ss')
+        });
     }
 }
 
