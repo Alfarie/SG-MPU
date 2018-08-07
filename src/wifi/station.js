@@ -40,6 +40,7 @@ var StartWifi = function (ssid, password) {
     
     console.log('[Info] dhcpcd restart');
     execSync('sudo service dhcpcd restart');
+    setTimeout(()=>{execSync('sudo reboot')}, 500)
 }
 
 module.exports = {

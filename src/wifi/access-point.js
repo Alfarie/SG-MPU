@@ -60,7 +60,7 @@ rsn_pairwise=CCMP
     console.log('[Info] Start hostapd, dnsmasq');
     execSync('sudo systemctl start hostapd');
     execSync('sudo systemctl start dnsmasq');
-    setTimeout(()=>{execSync('sudo reboot')}, 5000)
+    setTimeout(()=>{execSync('sudo reboot')}, 500)
 }
 
 module.exports = {
