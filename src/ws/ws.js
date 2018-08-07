@@ -21,33 +21,34 @@ app.use(express.urlencoded({
 var root = path.join(path.resolve(__dirname, '../../dist/'));
 app.use(express.static(root));
 var port = 3000;
-app.use((req, res, next) => {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (req.originalUrl == '/auth/signin') {
-        next();
-    }
-    else if (token) {
 
-        jwt.verify(token, app.get('superSecret'), function (err, decoded) {
-            if (err) {
-                console.log(err);
-                return res.status(403).json({
-                    success: false,
-                    message: 'Failed to authenticate token.'
-                });
-            } else {
-                // if everything is good, save to request for use in other routes
-                req.decoded = decoded;
-                next();
-            }
-        })
-    } else {
-        return res.status(403).json({
-            success: false,
-            message: 'No token provided.'
-        });
-    }
-})
+// app.use((req, res, next) => {
+//     var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//     if (req.originalUrl == '/auth/signin') {
+//         next();
+//     }
+//     else if (token) {
+
+//         jwt.verify(token, app.get('superSecret'), function (err, decoded) {
+//             if (err) {
+//                 console.log(err);
+//                 return res.status(403).json({
+//                     success: false,
+//                     message: 'Failed to authenticate token.'
+//                 });
+//             } else {
+//                 // if everything is good, save to request for use in other routes
+//                 req.decoded = decoded;
+//                 next();
+//             }
+//         })
+//     } else {
+//         return res.status(403).json({
+//             success: false,
+//             message: 'No token provided.'
+//         });
+//     }
+// })
 
 var controlApi = require('./control/control-api');
 app.use('/control/', controlApi);
