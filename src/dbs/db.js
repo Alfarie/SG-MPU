@@ -4,94 +4,59 @@ const fs = require('fs');
 var dbdir = path.join(path.resolve(__dirname, '../../DB'));
 var dbpath = dbdir + '/db.db';
 var moment = require('moment');
+var db = null;
 
-if (!fs.existsSync(dbdir)) {
-    fs.mkdirSync(dbdir);
+var connect = function () {
+    return new Promise((resolve, reject) => {
+        var db = new sqlite3.Database(dbpath);
+        resolve(db);
+    })
 }
 
-function Connect(){
-    return new Promise((resolve,reject) =>{
-        resolve(
-                new sqlite3.Database(dbpath, (err) => {
-                if (err) {
-                    return console.error(err.message);
-                }
-            })
-        )
-    });
-}
-function Close(db){
-    db.close();
-}
-function Init(db){
-    return new Promise( (resolve,reject)=>{
-        let sql = `CREATE TABLE IF NOT EXISTS sensors_logger(
-                        timestamp INTEGER PRIMARY KEY NOT NULL,
-                        datetime TEXT NOT NULL,
-                        soil NUMBER NOT NULL,
-                        temperature NUMBER NOT NULL,
-                        humidity NUMBER NOT NULL,
-                        vpd NUMBER NOT NULL,
-                        par NUMBER NOT NULL,
-                        co2 NUMBER NOT NULL,
-                        paracc NUMBER NOT NULL)
-                    `
-        db.run(sql, (err)=>{
-            if(err){
-                reject(err.message);
-            }
-            resolve(db);
+var run = async function (sql) {
+    return new Promise((resolve, reject) => {
+        db.run(sql, err => {
+            if (err) reject(err.message);
         })
     })
 }
 
-function ExecSql(sql, params){
-    Connect()
-    .then(db=>{
-        db.run(sql,params,(err)=>{
-            if(err){
-                console.log(err.message);
-            }
+var GetSql = async function (sql, params) {
+    return new Promise((resolve, reject) => {
+        db.all(sql, params, (err, rows) => {
+            if (err) reject(err.message);
+            resolve(rows);
         })
-        db.close();
-    })
-    .catch(err=>{
-        console.log(err);
-        db.close();
     })
 }
 
-function GetSql(sql, params){
-    return new Promise( (resolve, reject)=>{
-        Connect().then(db=>{
-            db.all(sql,params,(err,rows)=>{
-                if(err) reject(err.message);
-                db.close();
-                resolve(rows);
-            })
-        });
+var ExecSql = async function (sql, params) {
+    return new Promise((resolve, reject) => {
+        db.run(sql, params, (err) => {
+            if (err) reject(err);
+            resolve()
+        })
     })
 }
 
-// let sql = `INSERT INTO sensors_logger(timestamp,datetime,vpd,soil,temp,humi,co2,par,paracc)
-//             VALUES(?,?,?,?,?,?,?,?,?);`
-// let params = [moment().unix(), 
-//     moment().format('YYYY-MM-DD hh:mm:ss'),
-//     2200,
-//     50,
-//     25,
-//     60,
-//     1100,
-//     300,
-//     144
-// ]
+var initialize = async function () {
+    db = await connect();
+    var sql = `CREATE TABLE IF NOT EXISTS sensors_logger(
+        timestamp INTEGER PRIMARY KEY NOT NULL,
+        datetime TEXT NOT NULL,
+        soil NUMBER NOT NULL,
+        temperature NUMBER NOT NULL,
+        humidity NUMBER NOT NULL,
+        vpd NUMBER NOT NULL,
+        par NUMBER NOT NULL,
+        co2 NUMBER NOT NULL,
+        paracc NUMBER NOT NULL)
+    `
+    var res = await run(sql);
+}
 
-Connect()
-    .then(Init)
-    .then(Close)
-    .catch(err=>{
-        Close();
-    });
+if (!fs.existsSync(dbdir)) fs.mkdirSync(dbdir);
+initialize();
 
 module.exports = {
     ExecSql,
