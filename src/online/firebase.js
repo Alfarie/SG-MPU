@@ -99,21 +99,37 @@ function UpdateControl(control) {
 function UpdateMcuStatus(mcu) {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/mcu-status';
-        db.ref(path).set(mcu);
+        
+        try {
+            db.ref(path).set(mcu);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
 function UpdateMemoryStatus(mem) {
     if (auth.currentUser) {
         let path = '/memory-usage/' + mid + '/memory';
-        db.ref(path).push(mem);
+        
+        try {
+            db.ref(path).push(mem);
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 }
 
 function UpdateDateTime(datetime) {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/datetime/current';
-        db.ref(path).set(datetime);
+
+        try {
+            db.ref(path).set(datetime);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
@@ -121,17 +137,27 @@ function UpdateDateTime(datetime) {
 function UpdateSensorsDB(data) {
     if (auth.currentUser) {
         let path = '/dbs/' + mid + '/' + data.date;
-        db.ref(path).push(data);
+
+        try {
+            db.ref(path).push(data);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
 function UpdateMPUTime() {
     if (auth.currentUser) {
         let path = '/mids/' + mid + '/datetime/mpu';
-        db.ref(path).set({
-            date: moment().format('YYYY-MM-DD'),
-            time: moment().format('HH:mm:ss')
-        });
+        try {
+            db.ref(path).set({
+                date: moment().format('YYYY-MM-DD'),
+                time: moment().format('HH:mm:ss')
+            });
+        } catch (error) {
+            console.log(control, error);
+        }
+
     }
 }
 
