@@ -57,7 +57,7 @@ var LoggerLoop = function () {
             loggerStr.co2,
             loggerStr.paracc
         ]
-        db.ExecSql(sql,params)
+        db.ExecSql(sql,params).catch(error=>console.log(error))
     }
 }
 
@@ -198,8 +198,6 @@ function Initialize(p_mcu, p_config) {
     });
     start();
 }
-
-
 
 module.exports = {
     Initialize,
