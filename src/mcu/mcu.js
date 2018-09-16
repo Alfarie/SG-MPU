@@ -26,7 +26,6 @@ function GetCalibration() {
     return controlModel.calibration;
 }
 
-
 function GetSensors() {
     return sensorModel.sensors;
 }
@@ -247,64 +246,3 @@ module.exports = {
         McuUpdated
     }
 }
-
-
-
-// function ExecJsonCommand(json) {
-//     console.log('json command' + json + '--------------------------------------------------------------------');
-//     var type = json.type;
-//     var data = json.data;
-//     // control setting format: 'control-[type]'
-//     if (type.startsWith('control')) {
-//         /*
-//             split 'contorl-[type]' to only [type]
-//             ct: control type [manual, timer, setpoint, setbound, irrigation]
-//         */
-//         let ct = type.split('-')[1];
-//         data.forEach((chdata, ind) => {
-//             let ch = ind + 1;
-//             let d = data[ind];
-//             controlModel.control[ind][ct] = d[ct];
-//         })
-//         console.log('[Info] Recieved: ' + type);
-//     } else if (type == 'channel-status') {
-//         data.forEach((d, ind) => {
-//             controlModel.control[ind].ch = ind + 1;
-//             controlModel.control[ind].mode = d.mode;
-//             controlModel.control[ind].sensor = d.sensor;
-//             statusModel.gpio[ind] = d.status;
-//         })
-//     } else if (type == 'sensors') {
-//         /*
-//         data: json sensors object from mcu
-//         */
-
-//         sensorModel.sensors = data;
-//         GetSensorsSubject.next(data);
-//     } else if (type == 'channel-paracc') {
-//         /*
-//             data:  Array(4) [Object, Object, Object, Object]
-//                         acc:0
-//                         isuse:0
-//                         max:1500000
-//                         mode:0
-//         */
-//         statusModel.paracc = data;
-//     } else if (type == 'free-memory') {
-//         statusModel.freeMemory = data;
-//     } else if (type.startsWith('waterprocess')) {
-//         statusModel.waterStatus = json;
-//     } else if (type.startsWith('water-control')) {
-//         console.log('[Info] Recieved: control-water');
-//         controlModel.waterControl = data;
-//     } else if (type == 'co2-status') {
-//         statusModel.co2Status = data;
-//     } else if (type == 'ec-status') {
-//         statusModel.ecStatus = data;
-//     } else if (type == 'ph-status') {
-//         statusModel.phStatus = data;
-//     } else if (type == 'calibration') {
-//         console.log('[Info] Recieved: calibration');
-//         controlModel.calibration = data;
-//     }
-// }

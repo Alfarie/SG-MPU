@@ -45,9 +45,9 @@ var LoggerLoop = function () {
         //     if (err) console.log(err);
         // });
         let sql = `INSERT INTO sensors_logger(timestamp,datetime,soil,temperature,humidity,vpd,par,co2,paracc)
-            VALUES(?,?,?,?,?,?,?,?,?);`
+                VALUES(?,?,?,?,?,?,?,?,?);`
         let params = [
-            moment(statusModel.datetime.date + " " + statusModel.datetime.time).unix(), 
+            moment(statusModel.datetime.date + " " + statusModel.datetime.time).unix(),
             loggerStr.datetime,
             loggerStr.soil,
             loggerStr.temperature,
@@ -57,7 +57,7 @@ var LoggerLoop = function () {
             loggerStr.co2,
             loggerStr.paracc
         ]
-        db.ExecSql(sql,params).catch(error=>console.log(error))
+        db.ExecSql(sql, params).catch(error => console.log(error, params[1],loggerStr.paracc))
     }
 }
 
@@ -134,14 +134,14 @@ function GetLoggerByDate(date) {
     */
     let today = moment(date.replace('DATE', '') + " 00:00:00");
     let limitday = moment(date.replace('DATE', '') + " 23:59:59");
-    
+
     let sql = 'SELECT * FROM sensors_logger WHERE timestamp between ? AND ?;'
     let params = [today.unix(), limitday.unix()];
-    
-    return new Promise((resolve, reject)=>{
+
+    return new Promise((resolve, reject) => {
         db.GetSql(sql, params).then(
-            rows=>{
-               resolve(rows);
+            rows => {
+                resolve(rows);
             }
         )
     });
@@ -153,24 +153,23 @@ function GetLoggerByDateInterval(date, seconds) {
     */
     let today = moment(date.replace('DATE', '') + " 00:00:00");
     let limitday = moment(date.replace('DATE', '') + " 23:59:59");
-    
     let sql = 'SELECT * FROM sensors_logger WHERE timestamp between ? AND ?;'
     let params = [today.unix(), limitday.unix()];
 
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
         db.GetSql(sql, params).then(
             rows => {
-            //    resolve(rows);
+                //    resolve(rows);
                 var skipTime = seconds;
                 var i = 0;
                 var length = rows.length;
                 var data = []
-                while(i < length){
-                    if(skipTime == 0){
+                while (i < length) {
+                    if (skipTime == 0) {
                         data.push(rows[i]);
                         skipTime = seconds;
                     }
-                    else{
+                    else {
                         skipTime--;
                     }
                     i++;
@@ -181,7 +180,7 @@ function GetLoggerByDateInterval(date, seconds) {
     });
 }
 
-function GetShortLogger(){
+function GetShortLogger() {
     return shortLogger;
 }
 
@@ -196,7 +195,7 @@ function Initialize(p_mcu, p_config) {
         shortLogger.push(sensors);
         if (shortLogger.length > 60) shortLogger.shift();
     });
-    start();
+    setTimeout(() => start(), 3000);
 }
 
 module.exports = {

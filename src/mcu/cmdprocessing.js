@@ -137,6 +137,8 @@ function StatusCraft(header, cmdarr) {
     };
 }
 
+
+var isUpdating = false;
 function ControlCraft(header, cmdarr) {
     var craftedJson = {}
     if(header[1] == 'chst'){
@@ -217,7 +219,14 @@ function ControlCraft(header, cmdarr) {
         controlModel.waterControl.waitTime = waitTime;
         console.log('[Info] Recieved: water from channel ');
     }
-    
+    if(!isUpdating){
+        isUpdating = true;
+        setTimeout( ()=>{
+            require('../aws-online/aws-transmiter').updateControlStatus();
+            isUpdating = false;
+        },2000);
+
+    }
     return {
         data: craftedJson,
         header: header[1]

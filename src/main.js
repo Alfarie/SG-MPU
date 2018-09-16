@@ -11,10 +11,10 @@ if (!exit) {
     var ws = require('./ws/ws');
     var config = require('./args/config');
     var serial = require('./serial/serial');
-    var firebase = require('./online/firebase');
-    var online = require('./online/online');
-    var memory = require('./memory/memory')
-    var moment = require('moment');
+    var aws = require('./aws-online');
+    // var online = require('./aws-online/online');
+    // var memory = require('./memory/memory')
+    // var moment = require('moment');
     serial.Initialize();
 
     var mcu = require('./mcu/mcu');
@@ -30,41 +30,31 @@ if (!exit) {
     mcu.Subject.GetSensorsSubject.subscribe( sensors =>{
         ws.io.to('0x01').emit('SENSORS', sensors);
         ws.io.to('0x01').emit('DATETIME', mcu.GetDateTime());
-        ws.io.to('0x01').emit('CONNECTION', online.GetStateBoolean() );
+        // ws.io.to('0x01').emit('CONNECTION', online.GetStateBoolean() );
         ws.io.to('0x01').emit('GPIO', mcu.GetStatus().gpio);
         ws.io.to('0x01').emit('PARACC', mcu.GetStatus().paracc);
     });
 
-    setInterval( ()=>{
-        firebase.UpdateSensors(mcu.GetSensors());
-        firebase.UpdateDateTime(mcu.GetDateTime());
-        firebase.UpdateControl({
-            control: mcu.GetControl()
-        });
-        firebase.UpdateMcuStatus({
-            paracc: mcu.GetStatus().paracc,
-            gpio: mcu.GetStatus().gpio
-        });
-        firebase.UpdateMPUTime()
-    },2000);
-    
     // setInterval( ()=>{
-    //     firebase.UpdateMemoryStatus({
-    //         datetime: moment().format('YYYY-MM-DD HH:mm:ss'),
-    //         os: memory.GetOSMemory(),
-    //         node: memory.GetNodeMemory()
+    //     firebase.UpdateSensors(mcu.GetSensors());
+    //     firebase.UpdateDateTime(mcu.GetDateTime());
+    //     firebase.UpdateControl({
+    //         control: mcu.GetControl()
     //     });
+    //     firebase.UpdateMcuStatus({
+    //         paracc: mcu.GetStatus().paracc,
+    //         gpio: mcu.GetStatus().gpio
+    //     });
+    //     firebase.UpdateMPUTime()
+    // },2000);
+
+    // setInterval( ()=>{
+    //     var data = mcu.GetSensors();
+    //     data['date'] = moment().format('YYYY-MM-DD');
+    //     data['time'] = moment().format('HH:mm:ss');
+    //     data['datetime'] = moment().format('YYYY-MM-DD HH:mm:ss');
+    //     firebase.UpdateSensorsDB(data);
     // },60000);
-
-    setInterval( ()=>{
-        var data = mcu.GetSensors();
-        data['date'] = moment().format('YYYY-MM-DD');
-        data['time'] = moment().format('HH:mm:ss');
-        data['datetime'] = moment().format('YYYY-MM-DD HH:mm:ss');
-        firebase.UpdateSensorsDB(data);
-    },60000);
-
-
 
     var logger = require('./datalogger/datalogger');
     logger.Initialize(mcu,config);

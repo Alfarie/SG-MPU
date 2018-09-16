@@ -1,5 +1,5 @@
 var datetime = {
-    date: '01/01/2018',
+    date: '2018-01-01',
     time: '00:00:00'
 }
 var freeMemory = 0;
