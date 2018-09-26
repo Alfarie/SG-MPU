@@ -36,5 +36,20 @@
         "par_working": 15,
         "par_acc": 1.5,
         "mode": 1
+    },
+    "advcond": {
+        "timer_list": [],
+        "timer_size": 0,
+        "timer_flag": false,
+        "sensor_condition": 3,
+        "sensor_setpoint": 30,
+        "sensor_flag": false,
+        "sensor_direction": 0,
+        
+        "sensor": 5,
+        "setpoint": 600,
+        "working": 15,
+        "detecting": 30,
+        "direction": 0
     }
 }

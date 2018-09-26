@@ -20,4 +20,8 @@ awsclient.onDelta.asObservable().subscribe( stateObject => {
         });
         mcu.SendCommand(ctrlCh)
     }
+    if(state.datetime){
+        mcu.SendDateTime(state.datetime);
+        awsclient.clearDesired();
+    }
 });

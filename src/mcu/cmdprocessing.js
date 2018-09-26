@@ -207,6 +207,47 @@ function ControlCraft(header, cmdarr) {
         controlModel.control[ch-1].irrigation.mode = parseFloat(cmdarr[9]);
         console.log('[Info] Recieved: Irrigation from channel ' + ch);
     }
+    else if(header[1] == 'advcond'){
+        // console.log(cmdarr)
+        /*
+            "advcond": {
+                "timer_list": [],
+                "timer_size": 0,
+                "timer_flag": false,
+                "sensor_condition": 3,
+                "sensor_setpoint": 30,
+                "sensor_flag": false,
+                "sensor": 5,
+                "setpoint": 600,
+                "working": 15,
+                "detecting": 30
+            }
+                            "{ct-advcond," + String(i + 1) +
+                           "," + String(rom_channel[i].advcond.setpoint) +
+                           "," + String(rom_channel[i].advcond.working) +
+                           "," + String(rom_channel[i].advcond.detecting) +
+                           "," + String(rom_channel[i].advcond.sensor) +
+                           "," + String(rom_channel[i].advcond.direction) +
+                           "," + String(rom_channel[i].advcond.sensor_condition) +
+                           "," + String(rom_channel[i].advcond.sensor_direction) +
+                           "," + String(rom_channel[i].advcond.sensor_setpoint) +
+                           "," + String(rom_channel[i].advcond.sensor_flag) +
+                           "," + String(rom_channel[i].advcond.timer_flag);
+        */
+       var ch = parseInt(cmdarr[0]);
+       controlModel.control[ch-1].advcond.setpoint = parseFloat(cmdarr[1]);
+       controlModel.control[ch-1].advcond.working = parseFloat(cmdarr[2]);
+       controlModel.control[ch-1].advcond.detecting = parseFloat(cmdarr[3]);
+       controlModel.control[ch-1].advcond.sensor = parseInt(cmdarr[4]);
+       controlModel.control[ch-1].advcond.direction = parseInt(cmdarr[5]);
+       controlModel.control[ch-1].advcond.sensor_condition = parseInt(cmdarr[6]);
+       controlModel.control[ch-1].advcond.sensor_direction = parseInt(cmdarr[7]);
+       controlModel.control[ch-1].advcond.sensor_setpoint = parseFloat(cmdarr[8]);
+       controlModel.control[ch-1].advcond.sensor_flag = parseInt(cmdarr[9]) == 1? true:false
+       controlModel.control[ch-1].advcond.timer_flag = parseInt(cmdarr[10]) == 1? true:false
+       controlModel.control[ch-1].advcond.timer_list = JSON.parse(ReplaceAll(cmdarr[11],'-', ','));
+       console.log('[Info] Recieved: Advance Control from channel ' + ch);
+    }
     //{ct-water,0,0,900,900}
     else if(header[1] == 'water'){
         var isCir = parseInt(cmdarr[0]);

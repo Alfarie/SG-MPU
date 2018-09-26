@@ -52,8 +52,8 @@ async function IotDeviceInit(){
     });
 
     thingShadows.on('status', (thingName, stat, clientToken, stateObject) => {
-        console.log('received ' + stat + ' on ' + thingName + ': ' +
-            JSON.stringify(stateObject.state.reported));
+        // console.log('received ' + stat + ' on ' + thingName + ': ' +
+        //     JSON.stringify(stateObject.state.reported));
     });
 
     thingShadows.on('error', (error) => {
@@ -61,9 +61,9 @@ async function IotDeviceInit(){
     });
 
     thingShadows.on('delta', (thingName, stateObject) => {
-        console.log('received delta on ' + thingName + ': ' +
-            JSON.stringify(stateObject.state));
-        var state = stateObject.state // desired 
+        // console.log('received delta on ' + thingName + ': ' +
+        //     JSON.stringify(stateObject.state));
+        // var state = stateObject.state // desired 
         onDelta.next(stateObject)
 
     });
@@ -103,10 +103,22 @@ function UpdateThingShadow(data) {
     }
 }
 
+function clearDesired(){
+    var state = { state: { desired: null } };
+    clientTokenUpdate = thingShadows.update(thingName, state);
+    if (clientTokenUpdate === null) {
+        console.log('[Error] update shadow failed, operation still in progress');
+    }
+    else {
+        console.log('[Info] update shadow successful');
+    }
+}
+
 Init();
 module.exports = {
     Publish,
     Subscribe,
     UpdateThingShadow,
-    onDelta
+    onDelta,
+    clearDesired
 }

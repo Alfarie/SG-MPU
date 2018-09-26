@@ -19,13 +19,14 @@ function getLoggerSensors() {
 var getControlStatus = () => {
     var control = mcu.GetControl();
     return {
-        gpio: mcu.GetStatus().gpio,
         control: {
             ch1: control[0],
             ch2: control[1],
             ch3: control[2],
             ch4: control[3]
-        }
+        },
+        /*dt: {date: "2017-01-01", time: "10:46"}*/
+        datetime: {date: "2018-01-01", time: "00:00" }
     }
 }
 // console.log(getControlStatus());

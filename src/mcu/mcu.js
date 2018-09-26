@@ -59,6 +59,7 @@ function RequestControlSequence() {
     write.next('{Gcontrol,setpoint,1,4}'); 
     write.next('{Gcontrol,sbtiming,1,4}'); 
     write.next('{Gcontrol,irrigation,1,4}');
+    write.next('{Gcontrol,advcond,1,4}');
     // write.next('{Gwater-control}')
     // write.next('{getcal}')
     write.next('{done}')
@@ -108,6 +109,7 @@ function CommandVerify(cmd) {
         else if (type == 'IRR') write.next('{Gcontrol,irrigation,' + ch + ',1}');
         else if (type == 'TIMER') write.next('{Gcontrol,timer,' + ch + ',1}');
         else if (type == 'MANUAL') write.next('{Gcontrol,manual,' + ch + ',1}');
+        else if (type == 'ADVCOND') write.next('{Gcontrol,advcond,' + ch + ',1}');
         else if (type == 'SETCAL') write.next('{getcal}');
         if (ch) write.next('{Gcontrol,channelstatus,' + ch + ',1}');
     } else if (cmd == 'DONE') {
@@ -175,7 +177,16 @@ function SendCommand(chData) {
         let irr = chData.irrigation;
         strcmd = "{irrigation," + ch + "," + irr.mode + "," + irr.soil_upper + "," + irr.soil_lower + "," + irr.soil_detecting + "," + irr.soil_working + "," + irr.par_soil_setpoint + "," + irr.par_working + "," + irr.par_detecting  + "," + irr.par_acc + "}";
     } else if (mode == 6) {
-        strcmd = "{mode," + ch + "," + mode + "}";
+         //{advancecond, ch, setpoint, working, detecting, sensor, direction , sensor_cond, sensor_direction, sensor_set,
+    //              sensor_flag, timer_flag, 480-1080,1100-1120}
+        var advcond = chData.advcond;
+        var sensor_flag = advcond.sensor_flag?1:0;
+        var timer_flag = advcond.timer_flag?1:0;
+        strcmd = "{advancecond," + ch + "," + advcond.setpoint + "," + advcond.working + "," + advcond.detecting + "," + advcond.sensor + "," + advcond.direction + "," + advcond.sensor_condition + "," + advcond.sensor_direction + "," + advcond.sensor_setpoint + "," + sensor_flag + "," + timer_flag + ",";
+        // console.log(advcond.timer_list)
+        var strlist = advcond.timer_list.map(l=>l.join('-'));
+        strcmd = strcmd + strlist.join(",") + "}";
+        
     }
     console.log(strcmd);
     write.next(strcmd);
