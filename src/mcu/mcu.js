@@ -60,6 +60,8 @@ function RequestControlSequence() {
     write.next('{Gcontrol,sbtiming,1,4}'); 
     write.next('{Gcontrol,irrigation,1,4}');
     write.next('{Gcontrol,advcond,1,4}');
+    write.next('{Gcontrol,advsb,1,4}');
+    write.next('{Gcontrol,advsbt,1,4}');
     // write.next('{Gwater-control}')
     // write.next('{getcal}')
     write.next('{done}')
@@ -110,6 +112,8 @@ function CommandVerify(cmd) {
         else if (type == 'TIMER') write.next('{Gcontrol,timer,' + ch + ',1}');
         else if (type == 'MANUAL') write.next('{Gcontrol,manual,' + ch + ',1}');
         else if (type == 'ADVCOND') write.next('{Gcontrol,advcond,' + ch + ',1}');
+        else if (type == 'ADVSB') write.next('{Gcontrol,advsb,' + ch + ',1}');
+        else if (type == 'ADVSBT') write.next('{Gcontrol,asbsbt,' + ch + ',1}');
         else if (type == 'SETCAL') write.next('{getcal}');
         if (ch) write.next('{Gcontrol,channelstatus,' + ch + ',1}');
     } else if (cmd == 'DONE') {
@@ -176,7 +180,8 @@ function SendCommand(chData) {
         //{irrigation,ch, irr_mode,soil_up, soil_low, par_acc}
         let irr = chData.irrigation;
         strcmd = "{irrigation," + ch + "," + irr.mode + "," + irr.soil_upper + "," + irr.soil_lower + "," + irr.soil_detecting + "," + irr.soil_working + "," + irr.par_soil_setpoint + "," + irr.par_working + "," + irr.par_detecting  + "," + irr.par_acc + "}";
-    } else if (mode == 6) {
+    } 
+    else if (mode == 6) {
          //{advancecond, ch, setpoint, working, detecting, sensor, direction , sensor_cond, sensor_direction, sensor_set,
     //              sensor_flag, timer_flag, 480-1080,1100-1120}
         var advcond = chData.advcond;
@@ -187,6 +192,28 @@ function SendCommand(chData) {
         var strlist = advcond.timer_list.map(l=>l.join('-'));
         strcmd = strcmd + strlist.join(",") + "}";
         
+    }
+    else if (mode == 7) {
+         //{advancecond, ch, setpoint, working, detecting, sensor, direction , sensor_cond, sensor_direction, sensor_set,
+    //              sensor_flag, timer_flag, 480-1080,1100-1120}
+        var advsb = chData.advsb;
+        var sensor_flag = advsb.sensor_flag?1:0;
+        var timer_flag = advsb.timer_flag?1:0;
+        strcmd = "{advancesb," + ch + "," + advsb.upper + "," + advsb.lower + "," + advsb.sensor + "," + advsb.direction + "," + advsb.sensor_condition + "," + advsb.sensor_direction + "," + advsb.sensor_setpoint + "," + sensor_flag + "," + timer_flag + ",";
+        // console.log(advsb.timer_list)
+        var strlist = advsb.timer_list.map(l=>l.join('-'));
+        strcmd = strcmd + strlist.join(",") + "}";
+    }
+    else if (mode == 8) {
+         //{advancecond, ch, setpoint, working, detecting, sensor, direction , sensor_cond, sensor_direction, sensor_set,
+    //              sensor_flag, timer_flag, 480-1080,1100-1120}
+        var advsbt = chData.advsbt;
+        var sensor_flag = advsbt.sensor_flag?1:0;
+        var timer_flag = advsbt.timer_flag?1:0;
+        strcmd = "{advancesbt," + ch + "," + advsbt.upper + "," + advsbt.lower+ "," + advsbt.working + "," + advsbt.detecting + "," + advsbt.sensor + "," + advsbt.direction + "," + advsbt.sensor_condition + "," + advsbt.sensor_direction + "," + advsbt.sensor_setpoint + "," + sensor_flag + "," + timer_flag + ",";
+        // console.log(advsbt.timer_list)
+        var strlist = advsbt.timer_list.map(l=>l.join('-'));
+        strcmd = strcmd + strlist.join(",") + "}";
     }
     console.log(strcmd);
     write.next(strcmd);

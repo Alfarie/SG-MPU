@@ -248,6 +248,89 @@ function ControlCraft(header, cmdarr) {
        controlModel.control[ch-1].advcond.timer_list = JSON.parse(ReplaceAll(cmdarr[11],'-', ','));
        console.log('[Info] Recieved: Advance Control from channel ' + ch);
     }
+    else if(header[1] == 'advsb'){
+        // console.log(cmdarr)
+        /*
+            "advcond": {
+                "timer_list": [],
+                "timer_size": 0,
+                "timer_flag": false,
+                "sensor_condition": 3,
+                "sensor_setpoint": 30,
+                "sensor_flag": false,
+                "sensor": 5,
+                "setpoint": 600,
+                "working": 15,
+                "detecting": 30
+            }
+                            "{ct-advcond," + String(i + 1) +
+                           "," + String(rom_channel[i].advcond.setpoint) +
+                           "," + String(rom_channel[i].advcond.working) +
+                           "," + String(rom_channel[i].advcond.detecting) +
+                           "," + String(rom_channel[i].advcond.sensor) +
+                           "," + String(rom_channel[i].advcond.direction) +
+                           "," + String(rom_channel[i].advcond.sensor_condition) +
+                           "," + String(rom_channel[i].advcond.sensor_direction) +
+                           "," + String(rom_channel[i].advcond.sensor_setpoint) +
+                           "," + String(rom_channel[i].advcond.sensor_flag) +
+                           "," + String(rom_channel[i].advcond.timer_flag);
+        */
+       var ch = parseInt(cmdarr[0]);
+       controlModel.control[ch-1].advsb.upper = parseFloat(cmdarr[1]);
+       controlModel.control[ch-1].advsb.lower = parseFloat(cmdarr[2]);
+       controlModel.control[ch-1].advsb.sensor = parseInt(cmdarr[3]);
+       controlModel.control[ch-1].advsb.direction = parseInt(cmdarr[4]);
+       controlModel.control[ch-1].advsb.sensor_condition = parseInt(cmdarr[5]);
+       controlModel.control[ch-1].advsb.sensor_direction = parseInt(cmdarr[6]);
+       controlModel.control[ch-1].advsb.sensor_setpoint = parseFloat(cmdarr[7]);
+       controlModel.control[ch-1].advsb.sensor_flag = parseInt(cmdarr[8]) == 1? true:false
+       controlModel.control[ch-1].advsb.timer_flag = parseInt(cmdarr[9]) == 1? true:false
+       controlModel.control[ch-1].advsb.timer_list = JSON.parse(ReplaceAll(cmdarr[10],'-', ','));
+       console.log('[Info] Recieved: Advance Setbound from channel ' + ch);
+    }
+
+    else if(header[1] == 'advsbt'){
+        // console.log(cmdarr)
+        /*
+            "advcond": {
+                "timer_list": [],
+                "timer_size": 0,
+                "timer_flag": false,
+                "sensor_condition": 3,
+                "sensor_setpoint": 30,
+                "sensor_flag": false,
+                "sensor": 5,
+                "setpoint": 600,
+                "working": 15,
+                "detecting": 30
+            }
+                            "{ct-advcond," + String(i + 1) +
+                           "," + String(rom_channel[i].advcond.setpoint) +
+                           "," + String(rom_channel[i].advcond.working) +
+                           "," + String(rom_channel[i].advcond.detecting) +
+                           "," + String(rom_channel[i].advcond.sensor) +
+                           "," + String(rom_channel[i].advcond.direction) +
+                           "," + String(rom_channel[i].advcond.sensor_condition) +
+                           "," + String(rom_channel[i].advcond.sensor_direction) +
+                           "," + String(rom_channel[i].advcond.sensor_setpoint) +
+                           "," + String(rom_channel[i].advcond.sensor_flag) +
+                           "," + String(rom_channel[i].advcond.timer_flag);
+        */
+       var ch = parseInt(cmdarr[0]);
+       controlModel.control[ch-1].advsbt.upper = parseFloat(cmdarr[1]);
+       controlModel.control[ch-1].advsbt.lower = parseFloat(cmdarr[2]);
+       controlModel.control[ch-1].advsbt.working = parseFloat(cmdarr[3]);
+       controlModel.control[ch-1].advsbt.detecting = parseFloat(cmdarr[4]);
+       controlModel.control[ch-1].advsbt.sensor = parseInt(cmdarr[5]);
+       controlModel.control[ch-1].advsbt.direction = parseInt(cmdarr[6]);
+       controlModel.control[ch-1].advsbt.sensor_condition = parseInt(cmdarr[7]);
+       controlModel.control[ch-1].advsbt.sensor_direction = parseInt(cmdarr[8]);
+       controlModel.control[ch-1].advsbt.sensor_setpoint = parseFloat(cmdarr[9]);
+       controlModel.control[ch-1].advsbt.sensor_flag = parseInt(cmdarr[10]) == 1? true:false
+       controlModel.control[ch-1].advsbt.timer_flag = parseInt(cmdarr[11]) == 1? true:false
+       controlModel.control[ch-1].advsbt.timer_list = JSON.parse(ReplaceAll(cmdarr[12],'-', ','));
+       console.log('[Info] Recieved: Advance Timing Setbound from channel ' + ch);
+    }
     //{ct-water,0,0,900,900}
     else if(header[1] == 'water'){
         var isCir = parseInt(cmdarr[0]);

@@ -51,5 +51,35 @@
         "working": 15,
         "detecting": 30,
         "direction": 0
+    },
+    "advsb": {
+        "timer_list": [],
+        "timer_size": 0,
+        "timer_flag": false,
+        "sensor_condition": 3,
+        "sensor_setpoint": 30,
+        "sensor_flag": false,
+        "sensor_direction": 0,
+        
+        "sensor": 5,
+        "upper": 2000,
+        "lower": 1500,
+        "direction": 0
+    },
+    "advsbt": {
+        "timer_list": [],
+        "timer_size": 0,
+        "timer_flag": false,
+        "sensor_condition": 3,
+        "sensor_setpoint": 30,
+        "sensor_flag": false,
+        "sensor_direction": 0,
+        
+        "sensor": 5,
+        "upper": 2000,
+        "lower": 1500,
+        "working": 10,
+        "detecting": 10,
+        "direction": 0
     }
 }
