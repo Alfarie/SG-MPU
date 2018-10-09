@@ -37,6 +37,13 @@
         "par_acc": 1.5,
         "mode": 1
     },
+    "dfirrigation": {
+        "upper": 60,
+        "lower": 40,
+        "paracc": 1.0,
+        "working": 15,
+        "descent": 50
+    },
     "advcond": {
         "timer_list": [],
         "timer_size": 0,

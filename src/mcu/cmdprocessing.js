@@ -207,6 +207,15 @@ function ControlCraft(header, cmdarr) {
         controlModel.control[ch-1].irrigation.mode = parseFloat(cmdarr[9]);
         console.log('[Info] Recieved: Irrigation from channel ' + ch);
     }
+    else if(header[1] == 'dfirrigation'){
+        var ch = parseInt(cmdarr[0]);
+        controlModel.control[ch-1].dfirrigation.upper = parseFloat(cmdarr[1]);
+        controlModel.control[ch-1].dfirrigation.lower = parseFloat(cmdarr[2]);
+        controlModel.control[ch-1].dfirrigation.paracc = parseFloat(cmdarr[3]);
+        controlModel.control[ch-1].dfirrigation.working = parseFloat(cmdarr[4]);
+        controlModel.control[ch-1].dfirrigation.descent = parseFloat(cmdarr[5]);
+        console.log('[Info] Recieved: DF Irrigation from channel ' + ch);
+    }
     else if(header[1] == 'advcond'){
         // console.log(cmdarr)
         /*

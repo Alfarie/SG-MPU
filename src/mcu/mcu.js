@@ -59,6 +59,7 @@ function RequestControlSequence() {
     write.next('{Gcontrol,setpoint,1,4}'); 
     write.next('{Gcontrol,sbtiming,1,4}'); 
     write.next('{Gcontrol,irrigation,1,4}');
+    write.next('{Gcontrol,dfirrigation,1,4}');
     write.next('{Gcontrol,advcond,1,4}');
     write.next('{Gcontrol,advsb,1,4}');
     write.next('{Gcontrol,advsbt,1,4}');
@@ -114,6 +115,7 @@ function CommandVerify(cmd) {
         else if (type == 'ADVCOND') write.next('{Gcontrol,advcond,' + ch + ',1}');
         else if (type == 'ADVSB') write.next('{Gcontrol,advsb,' + ch + ',1}');
         else if (type == 'ADVSBT') write.next('{Gcontrol,asbsbt,' + ch + ',1}');
+        else if (type == 'DFIRR') write.next('{Gcontrol,dfirrigation,' + ch + ',1}');
         else if (type == 'SETCAL') write.next('{getcal}');
         if (ch) write.next('{Gcontrol,channelstatus,' + ch + ',1}');
     } else if (cmd == 'DONE') {
@@ -214,6 +216,13 @@ function SendCommand(chData) {
         // console.log(advsbt.timer_list)
         var strlist = advsbt.timer_list.map(l=>l.join('-'));
         strcmd = strcmd + strlist.join(",") + "}";
+    }
+    else if (mode == 9) {
+         //{advancecond, ch, setpoint, working, detecting, sensor, direction , sensor_cond, sensor_direction, sensor_set,
+    //              sensor_flag, timer_flag, 480-1080,1100-1120}
+        var advsbt = chData.dfirrigation;
+        strcmd = "{dfirrigation," + ch + "," + advsbt.upper + "," + advsbt.lower+ "," + advsbt.paracc + "," + advsbt.working + "," + advsbt.descent + "}";
+       
     }
     console.log(strcmd);
     write.next(strcmd);
