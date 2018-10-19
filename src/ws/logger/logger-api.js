@@ -84,7 +84,7 @@ router.get('/gets/date/csv', function (req, res) {
         })
     }
     // console.log(json);
-    logger.GetLoggerByDate(qstr.date).then(rows => {
+    logger.GetLoggerByDateInterval(qstr.date, 60).then(rows => {
         let keys = Object.keys(rows[0]);
         res.csv(
             rows, {
