@@ -20,13 +20,13 @@ router.get('/gets/date', function (req, res) {
 
 router.get('/gets/date/intervals', function (req, res) {
     var qstr = req.query;
-    if (qstr.date == undefined && qstr.second == undefined) {
+    if (qstr.date == undefined && qstr.minute == undefined) {
         res.json({
             "status": "query error"
         })
         return;
     }
-    logger.GetLoggerByDateInterval(qstr.date, qstr.second).then(
+    logger.GetLoggerByDateInterval(qstr.date, qstr.minute).then(
         rows => {
             res.json(rows);
         }
@@ -84,7 +84,7 @@ router.get('/gets/date/csv', function (req, res) {
         })
     }
     // console.log(json);
-    logger.GetLoggerByDateInterval(qstr.date, 60).then(rows => {
+    logger.GetLoggerByDateInterval(qstr.date, 1).then(rows => {
         let keys = Object.keys(rows[0]);
         res.csv(
             rows, {
@@ -92,8 +92,6 @@ router.get('/gets/date/csv', function (req, res) {
             });
     });
 });
-
-
 
 
 

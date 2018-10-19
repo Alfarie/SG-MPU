@@ -147,7 +147,7 @@ function GetLoggerByDate(date) {
     });
 }
 
-function GetLoggerByDateInterval(date, seconds) {
+function GetLoggerByDateInterval(date, minute) {
     /*
         date: 'DATEYYYY-MM-DD'
     */
@@ -160,14 +160,14 @@ function GetLoggerByDateInterval(date, seconds) {
         db.GetSql(sql, params).then(
             rows => {
                 //    resolve(rows);
-                var skipTime = seconds;
+                var skipTime = minute;
                 var i = 0;
                 var length = rows.length;
                 var data = []
                 while (i < length) {
                     if (skipTime == 0) {
                         data.push(rows[i]);
-                        skipTime = seconds;
+                        skipTime = minute;
                     }
                     else {
                         skipTime--;

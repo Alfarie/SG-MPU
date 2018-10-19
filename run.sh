@@ -6,7 +6,7 @@ echo "Script location: ${BASEDIR}"
 
 
 KILLP="sudo pkill -9 node"
-CMD="sudo node ${BASEDIR}/src/main.js -sp=/dev/tty.usbserial-DN0358X8 --iface=en0 --loggerTime=1000 -prod"  #--wificustom
+CMD="sudo node ${BASEDIR}/src/main.js -sp=/dev/tty.usbserial-DN0358X8 --iface=en0 --loggerTime=60000 -prod"  #--wificustom
 
 echo "[INFO] KILLING NodeJs Process..."
 # $KILLP
